@@ -1,0 +1,23 @@
+<resources>
+
+    <style name="MyMaterialTheme" parent="MyMaterialTheme.Base">
+
+    </style>
+
+    <style name="MyMaterialTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="MyMaterialThemeDialog" parent="@android:style/Widget.ProgressBar">
+        <!--<item name="android:alertDialogStyle">@style/CustomAlertDialogStyle</item>-->
+        <item name="android:windowBackground">@color/windowTransparent</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+
+</resources>

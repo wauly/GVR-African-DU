@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: :displaydataparser-release:@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/displaydataparser-release.aar/d830387ab277d1e382b5c3802cd40ecf/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/displaydataparser-release.aar/d830387ab277d1e382b5c3802cd40ecf/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

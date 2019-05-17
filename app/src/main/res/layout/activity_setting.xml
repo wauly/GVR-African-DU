@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gvr_background"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/txtHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/activity_horizontal_padding"
+        android:text="@string/str_gvr_wauly"
+        android:textSize="@dimen/textExtraLargeTabView"
+        app:layout_constraintLeft_toRightOf="parent"
+        app:layout_constraintRight_toLeftOf="parent" />
+
+    <View
+        android:id="@+id/viewDevivder"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/dvider_Background"
+        app:layout_constraintTop_toBottomOf="@id/txtHeader" />
+
+    <TextView
+        android:id="@+id/txtLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/activity_horizontal_padding"
+        android:text="@string/txt_dv_setup"
+        android:textSize="@dimen/textExtraLargeTabView" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:padding="6dp"
+        android:weightSum="2"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="10dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="@string/fuel_type"
+            android:textSize="30sp" />
+
+        <Spinner
+            android:id="@+id/fuel_type_spinner"
+            style="@android:style/Widget.Holo.Light.Spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:popupBackground="@color/gvr_background" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:padding="6dp"
+        android:weightSum="2"
+        android:layout_marginEnd="10dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="@string/fp_type"
+            android:textSize="30sp" />
+
+        <Spinner
+            android:id="@+id/fp_type_spinner"
+            style="@android:style/Widget.Holo.Light.Spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:popupBackground="@color/gvr_background" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:padding="6dp"
+        android:weightSum="2"
+        android:layout_marginEnd="10dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="@string/sleep_time"
+            android:textSize="30sp" />
+
+        <Spinner
+            android:id="@+id/sleep_time_spinner"
+            style="@android:style/Widget.Holo.Light.Spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:popupBackground="@color/gvr_background" />
+
+    </LinearLayout>
+
+</LinearLayout>

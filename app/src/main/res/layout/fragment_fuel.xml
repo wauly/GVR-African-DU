@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".mainscreen.fragmnet.FuelFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="30dp"
+        android:padding="6dp">
+
+        <TextView
+            android:id="@+id/pms_or_ago_text_view"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="50sp"
+            android:textColor="@color/white"
+            android:background="@color/green"
+            android:layout_height="wrap_content"
+            android:text="@string/pms"/>
+
+        <TextView
+            android:id="@+id/ppu_text_view"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:textSize="48sp"
+            android:layout_marginLeft="4dp"
+            android:layout_height="wrap_content"
+            android:text="@string/pms_price"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="6dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="50sp"
+            android:layout_height="wrap_content"
+            android:text="@string/price"/>
+
+        <TextView
+            android:id="@+id/price_text_view"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:textSize="48sp"
+            android:layout_height="wrap_content"
+            android:text="@string/price_value"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:padding="6dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="50sp"
+            android:layout_height="wrap_content"
+            android:text="@string/liters"/>
+
+        <TextView
+            android:id="@+id/liters_text_view"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:textSize="48sp"
+            android:layout_height="wrap_content"
+            android:text="@string/liters_value"/>
+
+    </LinearLayout>
+
+</LinearLayout>

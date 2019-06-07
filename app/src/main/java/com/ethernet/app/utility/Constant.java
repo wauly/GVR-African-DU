@@ -104,6 +104,8 @@ public class Constant {
         String FUEL_TYPE = "fuelType";
         String FP_TYPE = "fpType";
         String SLEEP_TIME = "sleepTime";
+        String IP_ADDRESS = "ipAddress";
+        String PORT = "port";
     }
 
 

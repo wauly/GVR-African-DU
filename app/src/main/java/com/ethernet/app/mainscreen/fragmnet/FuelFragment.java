@@ -34,7 +34,7 @@ public class FuelFragment extends BaseFragment {
     private TextView pmsOrAgoTextView;
     //variables
     private static String currentDisplayVol = "";
-    private String fuelType, fpType;
+    private String fuelType,fpType;
     private int sleepTime;
 
     public FuelFragment() {
@@ -51,14 +51,12 @@ public class FuelFragment extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fuel, container, false);
 
-        /*fuelType = PreferenceManager.getStringForKey(getContext(), Constant.DU_Setting.FUEL_TYPE, Constant.IS_EMPTY);
+        fuelType = PreferenceManager.getStringForKey(getContext(), Constant.DU_Setting.FUEL_TYPE, Constant.IS_EMPTY);
         fpType = PreferenceManager.getStringForKey(getContext(), Constant.DU_Setting.FP_TYPE, Constant.IS_EMPTY);
-        sleepTime = PreferenceManager.getIntForKey(getContext(), Constant.DU_Setting.SLEEP_TIME, 30000);*/
+        sleepTime = PreferenceManager.getIntForKey(getContext(), Constant.DU_Setting.SLEEP_TIME, 30000);
+
         initView(view);
         setListener(view);
-
-        fuelType = "PMS";
-        fpType = "1";
 
         if (!fuelType.isEmpty()) {
             pmsOrAgoTextView.setText(fuelType);
@@ -68,7 +66,6 @@ public class FuelFragment extends BaseFragment {
                 pmsOrAgoTextView.setBackgroundResource(R.color.colorAccent);
             }
         }
-
 
         GlobalBus.getBus().register(this);
 
@@ -124,7 +121,7 @@ public class FuelFragment extends BaseFragment {
                         litersTextView.setText(model.currentDispVol);
                         priceTextView.setText(model.currentDispSale);
                         ppuTextView.setText(model.ppu);
-                        needToStop(model.currentDispVol);
+                        //needToStop(model.currentDispVol);
                     }
                     break;
             }

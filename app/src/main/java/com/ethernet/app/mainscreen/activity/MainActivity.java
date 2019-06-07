@@ -17,7 +17,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.ethernet.app.R;
 import com.ethernet.app.global.BaseAppCompatActivity;
@@ -34,6 +33,7 @@ import com.ethernet.app.mainscreen.fragmnet.VerticalAddFragment;
 import com.ethernet.app.permission.PermissionsHelper;
 import com.ethernet.app.service.EthernetService;
 import com.ethernet.app.utility.Constant;
+import com.ethernet.app.utility.NetworkUtil;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONObject;
@@ -49,20 +49,20 @@ public class MainActivity extends BaseAppCompatActivity implements
     private DatabaseHandler database;
     private FragmentTransaction fragmentTransaction;
     private FragmentManager fragmentManager;
+    private MyBroadCastReceiver myBroadCastReceiver;
     //views
     private ImageView logoImageView;
     private FrameLayout frameLayout;
     //variables
     private int offlineIconDelayTime = 5000; //in Sec
-    private String deviceId = "5L2RWK";
+    private String deviceId = Constant.IS_EMPTY;
     // temporary variable
     private boolean isFirstTime;
     public static final String BROADCAST_ACTION = "SEND_DATA";
-    public static final String BROADCAST_ACTION_TOAST = "SEND_TOAST";
-
-    private MyBroadCastReceiver myBroadCastReceiver;
-    private ToastBroadCastReceiver toastBroadCastReceiver;
     private boolean stopToSendingData = true;
+    private String IP_ADDRESS = Constant.IS_EMPTY;
+    private String PORT = Constant.IS_EMPTY;
+    private String FP_TYPE = Constant.IS_EMPTY;
 
 
     @Override
@@ -81,16 +81,24 @@ public class MainActivity extends BaseAppCompatActivity implements
         initView();
         setListener();
         isPermissionsGranted();
-        startMyService();
-        registerMyReceiver();
-        registerToastReceiver();
+
 
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        startMyService();
+        registerMyReceiver();
+    }
+
+    @Override
     public void initView() {
+        deviceId = PreferenceManager.getStringForKey(this, Constant.DEVICE_ID, Constant.IS_EMPTY);
+        IP_ADDRESS =  PreferenceManager.getStringForKey(this, Constant.DU_Setting.IP_ADDRESS, Constant.IS_EMPTY);
+        PORT =  PreferenceManager.getStringForKey(this, Constant.DU_Setting.PORT, Constant.IS_EMPTY);
+        FP_TYPE =  PreferenceManager.getStringForKey(this, Constant.DU_Setting.FP_TYPE, Constant.IS_EMPTY);
         myBroadCastReceiver = new MyBroadCastReceiver();
-        toastBroadCastReceiver = new ToastBroadCastReceiver();
         frameLayout = findViewById(R.id.frame_layout);
         logoImageView = findViewById(R.id.logo_image_view);
     }
@@ -103,7 +111,19 @@ public class MainActivity extends BaseAppCompatActivity implements
     private void startMyService() {
         try {
             Intent myServiceIntent = new Intent(this, EthernetService.class);
+            myServiceIntent.putExtra("ip",IP_ADDRESS);
+            myServiceIntent.putExtra("port",PORT);
             startService(myServiceIntent);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    private void stopMyService() {
+        try {
+            Intent stopServiceIntent = new Intent(this, EthernetService.class);
+            stopService(stopServiceIntent);
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -119,7 +139,29 @@ public class MainActivity extends BaseAppCompatActivity implements
     }
 
     private void isPermissionsGranted() {
-        if (Build.VERSION.SDK_INT >= 23) {
+
+        if (checkInterNetConnection()) {
+            if (Build.VERSION.SDK_INT >= 23) {
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                ) {
+                    callGetContentApi();
+
+                } else {
+                    checkPermissions();
+                }
+            } else {
+                loadVerticalFragment();
+                Log.e(TAG,"Load fragment :" +"1");
+            }
+        } else {
+            Log.e(TAG,"Load fragment :" +"2");
+            loadVerticalFragment();
+
+        }
+
+       /* if (Build.VERSION.SDK_INT >= 23) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
@@ -130,21 +172,32 @@ public class MainActivity extends BaseAppCompatActivity implements
             }
         } else {
             callGetContentApi();
-        }
+        }*/
+    }
+    private void loadVerticalFragment(){
+        addFragment(new VerticalAddFragment(), Constant.ScreenType.VERTICAL_ADD);
+        logoImageView.setVisibility(View.GONE);
+        frameLayout.setVisibility(View.VISIBLE);
+    }
+    //Function to check internet connection
+    public Boolean checkInterNetConnection() {
+        int status = NetworkUtil.getConnectivityStatusString(getApplicationContext());
+        Log.e(TAG,"Status :" + status);
+        return status != NetworkUtil.NETWORK_STATUS_NOT_CONNECTED;
     }
 
     //get data from server method name is  :- GET_CONTENT
     private void callGetContentApi() {
-        isFirstTime = PreferenceManager.getBooleanForKey(getApplicationContext(),
+       /* isFirstTime = PreferenceManager.getBooleanForKey(getApplicationContext(),
                 "isFirstTime", false);
-        if (!isFirstTime) {
+        if (!isFirstTime) {*/
             GetContentAsyncTask task = new GetContentAsyncTask(this, database, myContext);
             task.execute(deviceId);
-        } else {
+        /*} else {
             logoImageView.setVisibility(View.GONE);
             frameLayout.setVisibility(View.VISIBLE);
             addFragment(new VerticalAddFragment(), Constant.ScreenType.VERTICAL_ADD);
-        }
+        }*/
 
     }
 
@@ -245,20 +298,22 @@ public class MainActivity extends BaseAppCompatActivity implements
     @Subscribe
     public void getEventMessage(EventMessage message) {
         String data = message.getEventMessage();
-        if (data.equalsIgnoreCase(Constant.STOP_FUELING)) {
+        /*if (data.equalsIgnoreCase(Constant.STOP_FUELING)) {
             if(stopToSendingData){
                 clearStack();
                 addFragment(new VerticalAddFragment(), Constant.ScreenType.VERTICAL_ADD);
                 stopToSendingData = false;
             }
 
-        }
+        }*/
     }
 
     @Override
     protected void onStop() {
-        super.onStop();
         GlobalBus.getBus().unregister(this);
+        unregisterReceiver(myBroadCastReceiver);
+        stopMyService();
+        super.onStop();
     }
 
     @Override
@@ -297,15 +352,21 @@ public class MainActivity extends BaseAppCompatActivity implements
             try {
                 Log.d(TAG, "onReceive() called");
                 String data = intent.getStringExtra(Constant.DATA);
-                //Toast.makeText(context, data, Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "DATA called :" +data);
+                //Toast.makeText(context, "DATA :"+ data, Toast.LENGTH_SHORT).show();
                 if (!data.isEmpty() && data != null) {
                     JSONObject jObj = new JSONObject(data);
-                    if (jObj.has("newState")) {
+                    if (jObj.has("newState") && jObj.has("fp")) {
+
                         String firstTimeCall = jObj.getString("newState");
-                        if (firstTimeCall.equalsIgnoreCase("calling")) {
-                            stopToSendingData = true;
+                        String fp = jObj.getString("fp");
+                        if (firstTimeCall.equalsIgnoreCase("calling") && fp.equals(FP_TYPE)) {
+                            //stopToSendingData = true;
                             clearStack();
                             addFragment(new HorizontalPaymentFuelFragment(), Constant.ScreenType.HORIZONTAL_ADD);
+                        }else if(firstTimeCall.equalsIgnoreCase("idle") && fp.equals(FP_TYPE)){
+                            clearStack();
+                            addFragment(new VerticalAddFragment(), Constant.ScreenType.VERTICAL_ADD);
                         }
                     }
 
@@ -317,33 +378,4 @@ public class MainActivity extends BaseAppCompatActivity implements
             }
         }
     }
-
-    class ToastBroadCastReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            try {
-                Log.d(TAG, "onReceive() called");
-                String data = intent.getStringExtra(Constant.DATA);
-                Toast.makeText(context, data, Toast.LENGTH_SHORT).show();
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-
-    private void registerToastReceiver() {
-
-        try {
-            IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addAction(BROADCAST_ACTION_TOAST);
-            registerReceiver(toastBroadCastReceiver, intentFilter);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-    }
-
-
 }

@@ -12,6 +12,7 @@ import com.gvr.displaydataparser.MessageFactory;
 import com.gvr.displaydataparser.Msg;
 import com.gvr.displaydataparser.RealtimeDataParser;
 import com.gvr.displaydataparser.iMessage;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -21,8 +22,8 @@ public class EthernetService extends Service {
     private String TAG = EthernetService.class.getSimpleName();
     private RealtimeDataParser realtimeDataParser = new RealtimeDataParser();
     private MessageFactory _mf = new MessageFactory();
-    private String IP_ADDRESS = "192.168.0.100";
-    private int PORT = 16224;
+    private String IP_ADDRESS = Constant.IS_EMPTY;
+    private int PORT;
     private Socket _socket;
 
     private boolean isRunning;
@@ -42,26 +43,32 @@ public class EthernetService extends Service {
     }
 
 
-
     private Runnable myTask = new Runnable() {
         @Override
         public void run() {
-            Log.i("INFO", "SOCKET BACKGROUND SERVICE IS RUNNING");
 
+           // Log.e("INFO", "SOCKET BACKGROUND SERVICE IS RUNNING");
             try {
-                if (_socket == null) {
+                //sendDataInSideActivity("I am in side urn method :" + IP_ADDRESS + " " + PORT);
+
+                if (_socket == null) {//|| _socket.isClosed()
+                    //Log.e(TAG, " START CONNECTING SOCKET");
                     _socket = new Socket(IP_ADDRESS, PORT);
-                    _socket.setKeepAlive(true);
+                    //_socket.setKeepAlive(true);
+                    sendDataInSideActivity("Socket connected");
+                    Log.e(TAG, " CONNECTING SOCKET SUCCESSFULLY");
                 }
+
                 int bytesRead;
                 InputStream inputStream = _socket.getInputStream();
+                //sendDataInSideActivity("below of input stream");
                 byte[] buffer = new byte[1024];
 
                 new Thread(() -> {
-                    while(true) {
+                    while (true) {
                         try {
                             Thread.sleep(10);
-                        }catch(InterruptedException e){
+                        } catch (InterruptedException e) {
 
                         }
                         if (realtimeDataParser.hasMessage()) {
@@ -71,41 +78,34 @@ public class EthernetService extends Service {
 
                                 if (msg != null) {
                                     sendDataInSideActivity(msg.toJson());
-                                    //GlobalBus.getBus().post(new EventMessage(msg.toJson()));
                                 }
                             }
                         }
                     }
                 }).start();
 
-
                 while ((bytesRead = inputStream.read(buffer)) != -1) {
                     char[] ch_str = new char[bytesRead];
 
-                    for(int i=0;i<bytesRead;i++){
-                        ch_str[i] = (char)(0x00FF & buffer[i]);
+                    for (int i = 0; i < bytesRead; i++) {
+                        ch_str[i] = (char) (0x00FF & buffer[i]);
                     }
                     realtimeDataParser.add(ch_str);
 
-                    for(int i=0;i<bytesRead;i++){
-                        buffer[i]=0;
+                    for (int i = 0; i < bytesRead; i++) {
+                        buffer[i] = 0;
                     }
-                }
+                    //try {
+                    //    Thread.sleep(10);
+                    //} catch (InterruptedException e) {
 
-                if(_socket.isClosed()){
-                    sendToastMessageInSideActivity("closed 1");
+                    //}
                 }
-
             } catch (IOException e) {
-                if(_socket.isClosed()){
-                    sendToastMessageInSideActivity("closed 2");
-                }
-
+                //sendToastMessageInSideActivity("IOException :" + e.getMessage());
                 e.printStackTrace();
-            }catch (Exception e){
-                if(_socket.isClosed()){
-
-                }
+            } catch (Exception e) {
+                //sendToastMessageInSideActivity("Exception :" + e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -113,11 +113,27 @@ public class EthernetService extends Service {
 
     @Override
     public void onDestroy() {
+        if (_socket != null) {
+            try {
+                _socket.close();
+                _socket = null;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         this.isRunning = false;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        if (intent != null) {
+            IP_ADDRESS = intent.getStringExtra("ip");
+            PORT = Integer.valueOf(intent.getStringExtra("port"));
+            Log.e(TAG, "IP : " + IP_ADDRESS + "::" + "PORT : " + PORT);
+
+        }
         if (!this.isRunning) {
             this.isRunning = true;
             this.backgroundThread.start();
@@ -125,34 +141,28 @@ public class EthernetService extends Service {
 
         return START_STICKY;
     }
-    private void sendDataInSideActivity(String data)
-    {
-        try
-        {
+
+    private void sendDataInSideActivity(String data) {
+        try {
             Intent broadCastIntent = new Intent();
             broadCastIntent.setAction(MainActivity.BROADCAST_ACTION);
             broadCastIntent.putExtra(Constant.DATA, data);
             sendBroadcast(broadCastIntent);
 
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
-    private void sendToastMessageInSideActivity(String data)
-    {
-        try
-        {
+
+    /*private void sendToastMessageInSideActivity(String data) {
+        try {
             Intent broadCastIntent = new Intent();
             broadCastIntent.setAction(MainActivity.BROADCAST_ACTION_TOAST);
             broadCastIntent.putExtra(Constant.DATA, data);
             sendBroadcast(broadCastIntent);
 
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             ex.printStackTrace();
-        }
-    }
+        }*/
+    //}
 }

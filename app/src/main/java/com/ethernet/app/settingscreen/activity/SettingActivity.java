@@ -17,13 +17,15 @@ public class SettingActivity extends BaseAppCompatActivity implements
 
     private static final String TAG = SettingActivity.class.getSimpleName();
 
+    final String[] ip_address = new String[]{"Select Ip Address", "192.168.0.100", "192.168.0.200"};
+    final String[] port = new String[]{"Select Port", "16223", "16224"};
     final String[] fuel_type = new String[]{"Select fuel type", "PMS", "AGO"};
     final String[] fp_type = new String[]{"Select fp type", "1", "2"};
     final String[] screen_sleep_time = new String[]{"Select sleep time", "30000", "20000"};
 
-    private Spinner fuelTypeSpinner,fpTypeSpinner,sleepTimeSpinner;
+    private Spinner ipAddressSpinner,portSpinner, fuelTypeSpinner,fpTypeSpinner,sleepTimeSpinner;
 
-    private ArrayAdapter<String> adapterFuelType,adapterFpType,adapterScreenSleepTime;
+    private ArrayAdapter<String> adapterIpAddress,adapterPort,adapterFuelType,adapterFpType,adapterScreenSleepTime;
 
 
     @Override
@@ -33,6 +35,15 @@ public class SettingActivity extends BaseAppCompatActivity implements
 
         initView();
         setListener();
+        // Ip address
+        adapterIpAddress = new ArrayAdapter<>(SettingActivity.this, android.R.layout.simple_spinner_item, ip_address);
+        adapterIpAddress.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        ipAddressSpinner.setAdapter(adapterIpAddress);
+        // Port
+        adapterPort = new ArrayAdapter<>(SettingActivity.this, android.R.layout.simple_spinner_item, port);
+        adapterPort.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        portSpinner.setAdapter(adapterPort);
+
         //Fuel Type
         adapterFuelType = new ArrayAdapter<>(SettingActivity.this, android.R.layout.simple_spinner_item, fuel_type);
         adapterFuelType.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
@@ -53,6 +64,8 @@ public class SettingActivity extends BaseAppCompatActivity implements
     }
     @Override
     public void initView() {
+        ipAddressSpinner = findViewById(R.id.ip_address_spinner);
+        portSpinner = findViewById(R.id.port_no_spinner);
         fuelTypeSpinner = findViewById(R.id.fuel_type_spinner);
         fpTypeSpinner = findViewById(R.id.fp_type_spinner);
         sleepTimeSpinner = findViewById(R.id.sleep_time_spinner);
@@ -61,6 +74,8 @@ public class SettingActivity extends BaseAppCompatActivity implements
 
     @Override
     public void setListener() {
+        ipAddressSpinner.setOnItemSelectedListener(this);
+        portSpinner.setOnItemSelectedListener(this);
         fuelTypeSpinner.setOnItemSelectedListener(this);
         fpTypeSpinner.setOnItemSelectedListener(this);
         sleepTimeSpinner.setOnItemSelectedListener(this);
@@ -71,6 +86,8 @@ public class SettingActivity extends BaseAppCompatActivity implements
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
+        final String ip_address = ipAddressSpinner.getSelectedItem().toString();
+        final String port = portSpinner.getSelectedItem().toString();
         final String fuel_type = fuelTypeSpinner.getSelectedItem().toString();
         final String fp_type = fpTypeSpinner.getSelectedItem().toString();
         final String sleep_time = sleepTimeSpinner.getSelectedItem().toString();
@@ -78,6 +95,22 @@ public class SettingActivity extends BaseAppCompatActivity implements
 
         int sp_id = parent.getId();
         switch (sp_id) {
+            case R.id.ip_address_spinner:
+                if (!ip_address.equals("Select Ip Address")) {
+                    ipAddressSpinner.setSelection(position, false);
+                    PreferenceManager.saveStringForKey(this, Constant.DU_Setting.IP_ADDRESS, parent.getItemAtPosition(position).toString().trim());
+                    adapterIpAddress.notifyDataSetChanged();
+
+                }
+                break;
+            case R.id.port_no_spinner:
+                if (!port.equals("Select Port")) {
+                    portSpinner.setSelection(position, false);
+                    PreferenceManager.saveStringForKey(this, Constant.DU_Setting.PORT, parent.getItemAtPosition(position).toString().trim());
+                    adapterPort.notifyDataSetChanged();
+
+                }
+                break;
             case R.id.fuel_type_spinner:
                 if (!fuel_type.equals("Select fuel type")) {
                     fuelTypeSpinner.setSelection(position, false);

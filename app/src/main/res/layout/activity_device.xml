@@ -49,7 +49,7 @@
         android:layout_gravity="center_horizontal"
         android:text="@string/success_message"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#ffffff"
+        android:textColor="#000000"
         android:textIsSelectable="false"
         android:textSize="18sp"
         android:visibility="gone" />
@@ -64,7 +64,7 @@
         android:paddingBottom="15dp"
         android:text=""
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#ffffff"
+        android:textColor="#000000"
         android:textIsSelectable="false"
         android:textSize="15sp" />
 

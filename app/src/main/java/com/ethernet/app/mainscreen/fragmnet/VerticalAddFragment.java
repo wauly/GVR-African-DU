@@ -269,7 +269,7 @@ public class VerticalAddFragment extends BaseFragment implements
 
             }
         }
-        //Log.e(TAG, "pingCallDelay TIME :" + pingCallDelay);
+        //Log.e(TAG, "pingCallDelay TI ME :" + pingCallDelay);
         //pingCallHandler.postDelayed(pingCallRunnable, pingCallDelay);
 
         startSlideContent(listOfContent.get(position));

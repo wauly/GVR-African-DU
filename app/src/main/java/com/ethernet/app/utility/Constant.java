@@ -53,6 +53,7 @@ public class Constant {
     public final static String NOT_HTTP_CONNECTION = "NOTHTTPCONNECTION";
     public final static String HORIZONTAL = "Horizontal";
     public final static String VERTICAL = "Vertical";
+    public final static String IS_INTERNET_WORKING = "internetWorks";
 
     public final static String IMAGE = "Image";
     public final static String VIDEO = "Video";
@@ -61,6 +62,10 @@ public class Constant {
     public final static String SAVE_OFF_LINE_TIME = "saveOfLineTime";
     public final static String OFFLINE_PING_ID = "id";
     public final static String STOP_FUELING = "stop";
+    public final static String DOWNLOAD_CONTENT = "need To download content";
+    public final static String DOWNLOAD_CONTENT_SUCCESSFUL = "content download successful";
+    public static final String DATE_FORMAT = "MM-dd-yyyy HH:mm:ss";
+    public final static String SAVE_OFFLINE = "saveOffline";
 
 
     public interface API_TAG {
@@ -177,7 +182,15 @@ public class Constant {
 
     public static String getCurrentDate() {
         Date d = new Date();
-        return DateFormat.format("MM-dd-yyyy HH:mm:ss", d.getTime()).toString();
+        return DateFormat.format(DATE_FORMAT, d.getTime()).toString();
+    }
+    public static String getOnlyCurrentDate() {
+        Date d = new Date();
+        return DateFormat.format("MM-dd-yyyy", d.getTime()).toString();
+    }
+    public static String getOnlyCurrentTime() {
+        Date d = new Date();
+        return DateFormat.format("HH:mm:ss", d.getTime()).toString();
     }
 
     public static String getFileName(String url) {
@@ -251,14 +264,13 @@ public class Constant {
         return false;
     }
 
-    public static Long offLineTimeDifference(String offLineTime) {
+    public static Long offLineTimeDifference(String startDateTime,String endDateTime) {
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT);
 
         try {
-            Date date1 = simpleDateFormat.parse(offLineTime);
-            Date date2 = simpleDateFormat.parse(getCurrentDate());
-
+            Date date1 = simpleDateFormat.parse(startDateTime);
+            Date date2 = simpleDateFormat.parse(endDateTime);
             return getDifferenceOffLineTime(date1, date2);
 
         } catch (ParseException e) {
@@ -286,5 +298,4 @@ public class Constant {
 
         return diffInSec;
     }
-
 }

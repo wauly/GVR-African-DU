@@ -25,19 +25,22 @@ public class OffLineDevicePingAsyncTask extends AsyncTask<Void, Void, String> {
     private DevicePingModel model;
     private String jsonResult = Constant.IS_EMPTY;
     private Long offlineTime;
+    private String _id;
 
     private GetOffLineDevicePingListener listener;
 
     public interface GetOffLineDevicePingListener {
-        void didReceivedOffLineDevicePingResult(String status, String json);
+        void didReceivedOffLineDevicePingResult(String status, String json,String id);
     }
 
 
     public OffLineDevicePingAsyncTask(GetOffLineDevicePingListener listener,
-                                      DevicePingModel devicePingModel,Long offlineTimeDifference) {
+                                      DevicePingModel devicePingModel,Long offlineTimeDifference,
+                                      String id) {
         this.listener = listener;
         this.model = devicePingModel;
         this.offlineTime = offlineTimeDifference;
+        this._id = id;
     }
 
     @Override
@@ -127,7 +130,7 @@ public class OffLineDevicePingAsyncTask extends AsyncTask<Void, Void, String> {
     protected void onPostExecute(String status) {
         super.onPostExecute(status);
         if(listener != null){
-            listener.didReceivedOffLineDevicePingResult(status,jsonResult);
+            listener.didReceivedOffLineDevicePingResult(status,jsonResult,_id);
         }
 
     }

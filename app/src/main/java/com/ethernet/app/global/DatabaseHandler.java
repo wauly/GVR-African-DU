@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.ethernet.app.mainscreen.model.ContentDataModel;
+import com.ethernet.app.mainscreen.model.DateTimeModel;
 import com.ethernet.app.mainscreen.model.DevicePingModel;
 import com.ethernet.app.utility.Constant;
 
@@ -20,10 +21,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     private static final String DATABASE_NAME = "ContentDatabase";
-
     private static final String TABLE_CONTENT = "contentTable";
-
     private static final String TABLE_OFFLINE_LOOP_CONTENT = "offLinLoopContent";
+    private static final String TABLE_SAVE_OFFLINE_DATE_TIME = "offlineDateTime";
 
     // field for content
     private static final String KEY_ID = "id";
@@ -51,6 +51,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_VIEW_CONTENT_COUNT = "viewcontentcount";
     private static final String KEY_VIEW_LOOP_COUNT = "viewloopcount";
     private static final String KEY_IS_OFFLINE = "is_offline";
+    // save offline time for every day
+    private static final String KEY_OFFLINE_DATE = "offline_date";
+    private static final String KEY_OFFLINE_TIME = "offline_time";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -79,8 +82,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_VIEW_CONTENT_COUNT + " TEXT," + KEY_VIEW_LOOP_COUNT + " TEXT,"
                 + KEY_IS_OFFLINE + " TEXT" + ")";
 
+        String CREATE_OFFLINE_DATE_AND_TIME_TABLE = "CREATE TABLE " + TABLE_SAVE_OFFLINE_DATE_TIME + "("
+                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_OFFLINE_DATE + " TEXT,"
+                + KEY_OFFLINE_TIME + " TEXT" + ")";
+
+
         db.execSQL(CREATE_CONTENT_TABLE);
         db.execSQL(CREATE_OFFLINE_LOOP_TABLE);
+        db.execSQL(CREATE_OFFLINE_DATE_AND_TIME_TABLE);
 
     }
 
@@ -365,5 +374,58 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.delete(TABLE_OFFLINE_LOOP_CONTENT, KEY_ID + "="+id,null);
         db.close();
     }
+    // TODO insert offline date and time
+    public void insertOfflineDateAndTime(DateTimeModel model){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_OFFLINE_DATE, model.dateValue);
+        values.put(KEY_OFFLINE_TIME, model.timeValue);
+        // Inserting Row
+        db.insert(TABLE_SAVE_OFFLINE_DATE_TIME, null, values);
+        //2nd argument is String containing nullColumnHack
+        db.close(); // Closing database connection
+    }
+    public boolean isDateAvailable(String currentDate) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String Query = "Select * from " + TABLE_SAVE_OFFLINE_DATE_TIME + " where " + KEY_OFFLINE_DATE + " = '" + currentDate+"'";
+        Cursor cursor = db.rawQuery(Query, null);
+        if(cursor.getCount() <= 0){
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
+    }
+    public ArrayList<DateTimeModel> getAllOfflineDateAndTime() {
+
+        ArrayList<DateTimeModel> dateTimeList = new ArrayList<>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_SAVE_OFFLINE_DATE_TIME;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                DateTimeModel model = new DateTimeModel();
+                model.id = cursor.getString(0);
+                model.dateValue = cursor.getString(1);
+                model.timeValue = cursor.getString(2);
+                // Adding contact to list
+                dateTimeList.add(model);
+            } while (cursor.moveToNext());
+        }
+
+        // return contact list
+        return dateTimeList;
+    }
+    public void deleteDateTimeById(String id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_SAVE_OFFLINE_DATE_TIME, KEY_ID + "="+id,null);
+        db.close();
+    }
+
 
 }

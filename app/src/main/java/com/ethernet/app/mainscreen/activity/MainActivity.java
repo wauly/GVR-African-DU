@@ -24,6 +24,7 @@ import com.ethernet.app.global.DatabaseHandler;
 import com.ethernet.app.global.EventMessage;
 import com.ethernet.app.global.GlobalBus;
 import com.ethernet.app.global.PreferenceManager;
+import com.ethernet.app.mainscreen.asynctask.CheckInternetAsyncTask;
 import com.ethernet.app.mainscreen.asynctask.DeleteImageAndVideoAsyncTask;
 import com.ethernet.app.mainscreen.asynctask.GetContentAsyncTask;
 import com.ethernet.app.mainscreen.asynctask.SaveContentUrlAsyncTask;
@@ -33,7 +34,6 @@ import com.ethernet.app.mainscreen.fragmnet.VerticalAddFragment;
 import com.ethernet.app.permission.PermissionsHelper;
 import com.ethernet.app.service.EthernetService;
 import com.ethernet.app.utility.Constant;
-import com.ethernet.app.utility.NetworkUtil;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONObject;
@@ -41,7 +41,8 @@ import org.json.JSONObject;
 public class MainActivity extends BaseAppCompatActivity implements
         PermissionsHelper.GetPermissionResultListener,
         GetContentAsyncTask.GetContentDateListener,
-        SaveContentUrlAsyncTask.SaveContentUrlListener {
+        SaveContentUrlAsyncTask.SaveContentUrlListener,
+        CheckInternetAsyncTask.CheckInternetWorksListener {
 
     private final String TAG = MainActivity.class.getSimpleName();
     //classes
@@ -54,15 +55,14 @@ public class MainActivity extends BaseAppCompatActivity implements
     private ImageView logoImageView;
     private FrameLayout frameLayout;
     //variables
-    private int offlineIconDelayTime = 5000; //in Sec
     private String deviceId = Constant.IS_EMPTY;
     // temporary variable
-    private boolean isFirstTime;
     public static final String BROADCAST_ACTION = "SEND_DATA";
-    private boolean stopToSendingData = true;
     private String IP_ADDRESS = Constant.IS_EMPTY;
     private String PORT = Constant.IS_EMPTY;
     private String FP_TYPE = Constant.IS_EMPTY;
+    private boolean isInternetWorks = false;
+    private String sendMessage = Constant.IS_EMPTY;
 
 
     @Override
@@ -82,7 +82,6 @@ public class MainActivity extends BaseAppCompatActivity implements
         setListener();
         isPermissionsGranted();
 
-
     }
 
     @Override
@@ -94,10 +93,11 @@ public class MainActivity extends BaseAppCompatActivity implements
 
     @Override
     public void initView() {
+        isInternetWorks = PreferenceManager.getBooleanForKey(this, Constant.IS_INTERNET_WORKING, false);
         deviceId = PreferenceManager.getStringForKey(this, Constant.DEVICE_ID, Constant.IS_EMPTY);
-        IP_ADDRESS =  PreferenceManager.getStringForKey(this, Constant.DU_Setting.IP_ADDRESS, Constant.IS_EMPTY);
-        PORT =  PreferenceManager.getStringForKey(this, Constant.DU_Setting.PORT, Constant.IS_EMPTY);
-        FP_TYPE =  PreferenceManager.getStringForKey(this, Constant.DU_Setting.FP_TYPE, Constant.IS_EMPTY);
+        IP_ADDRESS = PreferenceManager.getStringForKey(this, Constant.DU_Setting.IP_ADDRESS, Constant.IS_EMPTY);
+        PORT = PreferenceManager.getStringForKey(this, Constant.DU_Setting.PORT, Constant.IS_EMPTY);
+        FP_TYPE = PreferenceManager.getStringForKey(this, Constant.DU_Setting.FP_TYPE, Constant.IS_EMPTY);
         myBroadCastReceiver = new MyBroadCastReceiver();
         frameLayout = findViewById(R.id.frame_layout);
         logoImageView = findViewById(R.id.logo_image_view);
@@ -111,14 +111,15 @@ public class MainActivity extends BaseAppCompatActivity implements
     private void startMyService() {
         try {
             Intent myServiceIntent = new Intent(this, EthernetService.class);
-            myServiceIntent.putExtra("ip",IP_ADDRESS);
-            myServiceIntent.putExtra("port",PORT);
+            myServiceIntent.putExtra("ip", IP_ADDRESS);
+            myServiceIntent.putExtra("port", PORT);
             startService(myServiceIntent);
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
+
     private void stopMyService() {
         try {
             Intent stopServiceIntent = new Intent(this, EthernetService.class);
@@ -139,8 +140,7 @@ public class MainActivity extends BaseAppCompatActivity implements
     }
 
     private void isPermissionsGranted() {
-
-        if (checkInterNetConnection()) {
+        if (isInternetWorks) {
             if (Build.VERSION.SDK_INT >= 23) {
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
                         && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
@@ -153,52 +153,38 @@ public class MainActivity extends BaseAppCompatActivity implements
                 }
             } else {
                 loadVerticalFragment();
-                Log.e(TAG,"Load fragment :" +"1");
+                Log.e(TAG, "Load fragment :" + "1");
             }
         } else {
-            Log.e(TAG,"Load fragment :" +"2");
+            Log.e(TAG, "Load fragment :" + "2");
             loadVerticalFragment();
 
         }
-
-       /* if (Build.VERSION.SDK_INT >= 23) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-            ) {
-                callGetContentApi();
-            } else {
-                checkPermissions();
-            }
-        } else {
-            callGetContentApi();
-        }*/
     }
-    private void loadVerticalFragment(){
-        addFragment(new VerticalAddFragment(), Constant.ScreenType.VERTICAL_ADD);
+
+    private void loadVerticalFragment() {
+        Log.e(TAG,"Load vertical fragment");
+        final VerticalAddFragment fragment = new VerticalAddFragment();
+        addFragment(fragment, Constant.ScreenType.VERTICAL_ADD);
         logoImageView.setVisibility(View.GONE);
         frameLayout.setVisibility(View.VISIBLE);
     }
-    //Function to check internet connection
-    public Boolean checkInterNetConnection() {
-        int status = NetworkUtil.getConnectivityStatusString(getApplicationContext());
-        Log.e(TAG,"Status :" + status);
-        return status != NetworkUtil.NETWORK_STATUS_NOT_CONNECTED;
+
+    private void loadHorizontalPaymentFuelFragment() {
+        final HorizontalPaymentFuelFragment fragment = new HorizontalPaymentFuelFragment();
+        addFragment(fragment, Constant.ScreenType.HORIZONTAL_ADD);
     }
+
+    private void checkInterNetConnection() {
+        new CheckInternetAsyncTask(this, this).execute();
+    }
+
 
     //get data from server method name is  :- GET_CONTENT
     private void callGetContentApi() {
-       /* isFirstTime = PreferenceManager.getBooleanForKey(getApplicationContext(),
-                "isFirstTime", false);
-        if (!isFirstTime) {*/
-            GetContentAsyncTask task = new GetContentAsyncTask(this, database, myContext);
-            task.execute(deviceId);
-        /*} else {
-            logoImageView.setVisibility(View.GONE);
-            frameLayout.setVisibility(View.VISIBLE);
-            addFragment(new VerticalAddFragment(), Constant.ScreenType.VERTICAL_ADD);
-        }*/
-
+        Log.e(TAG,"calling get content api");
+        GetContentAsyncTask task = new GetContentAsyncTask(this, database, myContext);
+        task.execute(deviceId);
     }
 
     private void saveUrlInLocal() {
@@ -255,57 +241,13 @@ public class MainActivity extends BaseAppCompatActivity implements
         permissionsHelper.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
     }
 
-
-    // PermissionsHelper.GetPermissionResultListener
-    @Override
-    public void didReceivedPermission(String status) {
-        if (status.equals(Constant.ALLOW)) {
-            callGetContentApi();
-        } else {
-            // if user deny then this code run
-            checkPermissions();
-        }
-    }
-
-    //GetContentAsyncTask.GetContentDateListener
-    @Override
-    public void didReceivedGetContentDate(String status, int isContentAvailable) {
-        if (status.equals(Constant.SUCCESS)) {
-            if (isContentAvailable == Constant.NO_CONTENT_AVAILABLE) {
-                logoImageView.setVisibility(View.VISIBLE);
-                frameLayout.setVisibility(View.GONE);
-            } else {
-                saveUrlInLocal();
-            }
-
-        }
-    }
-
-    //SaveContentUrlAsyncTask.SaveContentUrlListener
-    @Override
-    public void didReceivedSaveContentUrlDate(String status) {
-        PreferenceManager.saveBooleanForKey(getApplicationContext(), "isFirstTime", true);
-        if (status.equals(Constant.SUCCESS) || status.equals(Constant.IS_EMPTY)) {
-            updateContentFlg();
-            addFragment(new VerticalAddFragment(), Constant.ScreenType.VERTICAL_ADD);
-            logoImageView.setVisibility(View.GONE);
-            frameLayout.setVisibility(View.VISIBLE);
-        }
-        deletedImageAndVideoFromLocal();
-    }
-
-
     @Subscribe
     public void getEventMessage(EventMessage message) {
-        String data = message.getEventMessage();
-        /*if (data.equalsIgnoreCase(Constant.STOP_FUELING)) {
-            if(stopToSendingData){
-                clearStack();
-                addFragment(new VerticalAddFragment(), Constant.ScreenType.VERTICAL_ADD);
-                stopToSendingData = false;
-            }
+         sendMessage = message.getEventMessage();
+        if (sendMessage.equals(Constant.DOWNLOAD_CONTENT)) {
+            checkInterNetConnection();
+        }
 
-        }*/
     }
 
     @Override
@@ -342,6 +284,7 @@ public class MainActivity extends BaseAppCompatActivity implements
         }
 
     }
+
     /**
      * MyBroadCastReceiver is responsible to receive broadCast from register action
      */
@@ -352,7 +295,7 @@ public class MainActivity extends BaseAppCompatActivity implements
             try {
                 Log.d(TAG, "onReceive() called");
                 String data = intent.getStringExtra(Constant.DATA);
-                Log.e(TAG, "DATA called :" +data);
+                Log.e(TAG, "DATA called :" + data);
                 //Toast.makeText(context, "DATA :"+ data, Toast.LENGTH_SHORT).show();
                 if (!data.isEmpty() && data != null) {
                     JSONObject jObj = new JSONObject(data);
@@ -361,12 +304,11 @@ public class MainActivity extends BaseAppCompatActivity implements
                         String firstTimeCall = jObj.getString("newState");
                         String fp = jObj.getString("fp");
                         if (firstTimeCall.equalsIgnoreCase("calling") && fp.equals(FP_TYPE)) {
-                            //stopToSendingData = true;
                             clearStack();
-                            addFragment(new HorizontalPaymentFuelFragment(), Constant.ScreenType.HORIZONTAL_ADD);
-                        }else if(firstTimeCall.equalsIgnoreCase("idle") && fp.equals(FP_TYPE)){
+                            loadHorizontalPaymentFuelFragment();
+                        } else if (firstTimeCall.equalsIgnoreCase("idle") && fp.equals(FP_TYPE)) {
                             clearStack();
-                            addFragment(new VerticalAddFragment(), Constant.ScreenType.VERTICAL_ADD);
+                            loadVerticalFragment();
                         }
                     }
 
@@ -378,4 +320,56 @@ public class MainActivity extends BaseAppCompatActivity implements
             }
         }
     }
+
+
+    //CheckInternetAsyncTask.CheckInternetWorksListener
+    @Override
+    public void didInternetWorking(boolean status) {
+        isInternetWorks = status;
+        if(isInternetWorks){
+            if (sendMessage.equals(Constant.DOWNLOAD_CONTENT)) {
+                callGetContentApi();
+                Log.e(TAG,"start to download new content");
+            }
+        }
+    }
+
+    // PermissionsHelper.GetPermissionResultListener
+    @Override
+    public void didReceivedPermission(String status) {
+        if (status.equals(Constant.ALLOW)) {
+            callGetContentApi();
+        } else {
+            // if user deny then this code run
+            checkPermissions();
+        }
+    }
+
+    //GetContentAsyncTask.GetContentDateListener
+    @Override
+    public void didReceivedGetContentDate(String status, int isContentAvailable) {
+        if (status.equals(Constant.SUCCESS)) {
+            if (isContentAvailable == Constant.NO_CONTENT_AVAILABLE) {
+                logoImageView.setVisibility(View.VISIBLE);
+                frameLayout.setVisibility(View.GONE);
+            } else {
+                saveUrlInLocal();
+            }
+
+        }
+    }
+
+    //SaveContentUrlAsyncTask.SaveContentUrlListener
+    @Override
+    public void didReceivedSaveContentUrlDate(String status) {
+        Log.e(TAG, "STATUS : "+status);
+        if (status.equals(Constant.SUCCESS) || status.equals(Constant.IS_EMPTY)) {
+            updateContentFlg();
+            loadVerticalFragment();
+            logoImageView.setVisibility(View.GONE);
+            frameLayout.setVisibility(View.VISIBLE);
+        }
+        deletedImageAndVideoFromLocal();
+    }
+
 }

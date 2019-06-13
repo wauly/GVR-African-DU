@@ -17,18 +17,23 @@ import android.widget.ImageView;
 import com.ethernet.app.R;
 import com.ethernet.app.global.BaseFragment;
 import com.ethernet.app.global.DatabaseHandler;
+import com.ethernet.app.global.EventMessage;
 import com.ethernet.app.global.FullScreenVideoView;
 import com.ethernet.app.global.GPSTracker;
+import com.ethernet.app.global.GlobalBus;
 import com.ethernet.app.global.PreferenceManager;
+import com.ethernet.app.mainscreen.asynctask.CheckInternetAsyncTask;
 import com.ethernet.app.mainscreen.asynctask.OffLineDevicePingAsyncTask;
 import com.ethernet.app.mainscreen.asynctask.OffLineLoopContentPingProcessTask;
 import com.ethernet.app.mainscreen.asynctask.OnLineDevicePingAsyncTask;
 import com.ethernet.app.mainscreen.asynctask.OnLineLoopContentPingProcessTask;
 import com.ethernet.app.mainscreen.model.ContentDataModel;
+import com.ethernet.app.mainscreen.model.DateTimeModel;
 import com.ethernet.app.mainscreen.model.DevicePingModel;
 import com.ethernet.app.utility.Constant;
 import com.ethernet.app.utility.NetworkUtil;
 
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,7 +44,8 @@ import java.util.ArrayList;
 
 public class HorizontalAddFragment extends BaseFragment implements
         OnLineDevicePingAsyncTask.GetOnLineDevicePingListener,
-        OffLineDevicePingAsyncTask.GetOffLineDevicePingListener {
+        OffLineDevicePingAsyncTask.GetOffLineDevicePingListener,
+        CheckInternetAsyncTask.CheckInternetWorksListener {
 
     private static final String TAG = HorizontalAddFragment.class.getSimpleName();
 
@@ -60,7 +66,6 @@ public class HorizontalAddFragment extends BaseFragment implements
     private Handler offLineIconHandler;
 
     //variable
-    private String deviceId;
     private int position;
     private String nowPlaying = ""; // This parameter take LOOP_CONTENT # DURATION;
     private long isOffline = 0;
@@ -68,12 +73,12 @@ public class HorizontalAddFragment extends BaseFragment implements
     private int viewLoopCount = 0;
     private int pingCallDelay = 4000;
     private int offlineIconDelayTime = 5000; //in Sec
-    private int storeLoopId = 0;
-    private boolean isDateSaved = false;
     private int contentCounter = 0; //  this Counter used in case of one loop count
-
     private Context thisContext;
-
+    private boolean isInternetWorks = false;
+    private int contentCounterForMany = 0;
+    private boolean saveOffline = false;
+    private String storeRecentLoopId = Constant.IS_EMPTY;
 
     public HorizontalAddFragment() {
         // Required empty public constructor
@@ -83,23 +88,29 @@ public class HorizontalAddFragment extends BaseFragment implements
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_advertisement, container, false);
-
+        //Log.e(TAG, "onCreateView()");
         thisContext = getContext();
         database = new DatabaseHandler(thisContext);
         gps = new GPSTracker(thisContext);
 
         initView(view);
         setListener(view);
-
         loadContentData();
+
 
         return view;
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        showOfflineIcon();
+        Log.e(TAG, "onResume()");
+    }
+
+    @Override
     public void initView(View view) {
-        //deviceId = PreferenceManager.getStringForKey(thisContext, Constant.DEVICE_ID, Constant.IS_EMPTY);
-        deviceId = "5L2RWK";
+        isInternetWorks = PreferenceManager.getBooleanForKey(getContext(), Constant.IS_INTERNET_WORKING, false);
         offLineIconImageView = view.findViewById(R.id.off_line_icon_image_view);
         logoImageView = view.findViewById(R.id.logo_image_view);
         sliderImageView = view.findViewById(R.id.slider_image_view);
@@ -112,41 +123,28 @@ public class HorizontalAddFragment extends BaseFragment implements
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        showOfflineIcon();
-        Log.e(TAG, "onResume()");
+    public void onStart() {
+        super.onStart();
+        GlobalBus.getBus().register(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         removeAllHandler();
-        Log.e(TAG, "onPause()");
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        Log.e(TAG, "onDetach()");
     }
 
     @Override
     public void onStop() {
+        GlobalBus.getBus().unregister(this);
         super.onStop();
-        Log.e(TAG, "onStop()");
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.e(TAG, "onDestroyView()");
-    }
     @Override
     public void onDestroy() {
         super.onDestroy();
         Log.e(TAG, "onDestroy()");
-        removeAllHandler();
+
     }
 
     private void showOfflineIcon() {
@@ -154,27 +152,14 @@ public class HorizontalAddFragment extends BaseFragment implements
         offLineIconHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (checkInterNetConnection()) {
-                   /* isDateSaved = false;
-                    offLineIconImageView.setVisibility(View.GONE);
-                    String offLineTimeDate = PreferenceManager.getStringForKey(thisContext, Constant.SAVE_OFF_LINE_TIME, Constant.IS_EMPTY);
-                    if (!offLineTimeDate.isEmpty()) {
-                        sendOfflinePing(Constant.offLineTimeDifference(offLineTimeDate));
-                        sendOfflineLoopContent();
-                    }
-                    PreferenceManager.saveStringForKey(thisContext, Constant.SAVE_OFF_LINE_TIME, Constant.IS_EMPTY);
-                } else {
-                    offLineIconImageView.setVisibility(View.VISIBLE);
-                    if (!isDateSaved) {
-                        PreferenceManager.saveStringForKey(thisContext, Constant.SAVE_OFF_LINE_TIME, Constant.getCurrentDate());
-                        isDateSaved = true;
-                    }*/
-                }
+                checkInterNetConnection();
+
                 offLineIconHandler.postDelayed(this, offlineIconDelayTime);
             }
         }, offlineIconDelayTime);
     }
-    private void removeAllHandler(){
+
+    private void removeAllHandler() {
         offLineIconHandler.removeCallbacks(null);
         offLineIconHandler.removeCallbacksAndMessages(null);
         pingCallHandler.removeCallbacks(null);
@@ -197,10 +182,9 @@ public class HorizontalAddFragment extends BaseFragment implements
     public Handler pingCallHandler = new Handler();
     public Runnable pingCallRunnable = this::callPing;
 
-    private void collectDevicePinkData() {
+    private void collectDevicePinkData(String dateValue) {
         devicePingModel = new DevicePingModel();
-        //devicePingModel.deviceId = PreferenceManager.getStringForKey(thisContext, Constant.DEVICE_ID, Constant.IS_EMPTY);
-        deviceId = "5L2RWK";
+        devicePingModel.deviceId = PreferenceManager.getStringForKey(thisContext, Constant.DEVICE_ID, Constant.IS_EMPTY);
         devicePingModel.uuId = PreferenceManager.getStringForKey(thisContext, Constant.UUID, Constant.IS_EMPTY);
         devicePingModel.deviceIp = Constant.getIpAddress(thisContext);
         if (gps.canGetLocation) {
@@ -213,15 +197,13 @@ public class HorizontalAddFragment extends BaseFragment implements
         devicePingModel.nowPlaying = nowPlaying; // send LOOP_CONTENT and add # duration
         devicePingModel.isOffline = isOffline; //  if You want to send offline pink 1 or online 0
         devicePingModel.offlineTime = offlineTime;
-        devicePingModel.date = Constant.getCurrentDate();
+        devicePingModel.date = dateValue;
         devicePingModel.viewContentCount = 1;
         devicePingModel.viewLoopCount = viewLoopCount;
     }
 
-    //Function to check internet connection
-    public Boolean checkInterNetConnection() {
-        int status = NetworkUtil.getConnectivityStatusString(thisContext);
-        return status != NetworkUtil.NETWORK_STATUS_NOT_CONNECTED;
+    private void checkInterNetConnection() {
+        new CheckInternetAsyncTask(getContext(), this).execute();
     }
 
     private void setOrientation() {
@@ -234,7 +216,7 @@ public class HorizontalAddFragment extends BaseFragment implements
     }
 
     private void callLoopContentPingProcessTask() {
-        collectDevicePinkData();
+        collectDevicePinkData(Constant.getCurrentDate());
         final OnLineLoopContentPingProcessTask task = new OnLineLoopContentPingProcessTask(devicePingModel);
         task.execute();
 
@@ -242,7 +224,7 @@ public class HorizontalAddFragment extends BaseFragment implements
 
     //  Call Device ping Webservice
     private void callDevicePinkAsyncTask() {
-        collectDevicePinkData();
+        collectDevicePinkData(Constant.getCurrentDate());
         OnLineDevicePingAsyncTask asyncTask = new OnLineDevicePingAsyncTask(this, devicePingModel);
         asyncTask.execute();
     }
@@ -250,7 +232,7 @@ public class HorizontalAddFragment extends BaseFragment implements
     // collect ping data in case of offline
     private void collectAllLoopContentDataForOffline() {
         isOffline = 1;
-        collectDevicePinkData();
+        collectDevicePinkData(Constant.getCurrentDate());
         database.insertAllOffLineLoopContent(devicePingModel);
     }
 
@@ -275,25 +257,30 @@ public class HorizontalAddFragment extends BaseFragment implements
             listOfContent.clear();
         }
         listOfContent = database.getAllHorizontalContent();
-        for (int i = 0; i < listOfContent.size(); i++) {
+        Log.e(TAG, "Size Of vertical content :" + listOfContent.size());
+        if (listOfContent.size() > 0) {
+            for (int i = 0; i < listOfContent.size(); i++) {
 
-            String[] separated = listOfContent.get(i).loopContent.split("#");
-            if (!storeLoopIdList.contains(Integer.parseInt(separated[1]))) {
-                storeLoopIdList.add(Integer.parseInt(separated[1]));
+                String[] separated = listOfContent.get(i).loopContent.split("#");
+                if (!storeLoopIdList.contains(Integer.parseInt(separated[1]))) {
+                    storeLoopIdList.add(Integer.parseInt(separated[1]));
+                }
+
+                String fileName = Constant.getFileName(listOfContent.get(i).url);
+                final String path = folder.toString() + "/" + fileName;
+                listOfContent.get(i).url = path;
+                File file = new File(folder, fileName);
+                if (file.exists()) {
+
+                }
             }
 
-            String fileName = Constant.getFileName(listOfContent.get(i).url);
-            final String path = folder.toString() + "/" + fileName;
-            listOfContent.get(i).url = path;
-            File file = new File(folder, fileName);
-            if (file.exists()) {
-
-            }
+            startSlideContent(listOfContent.get(position));
         }
-        //Log.e(TAG, "pingCallDelay TIME :" + pingCallDelay);
-        //pingCallHandler.postDelayed(pingCallRunnable, pingCallDelay);
 
-        startSlideContent(listOfContent.get(position));
+        pingCallHandler.postDelayed(pingCallRunnable, pingCallDelay);
+
+
     }
 
     private void startSlideContent(ContentDataModel model) {
@@ -302,33 +289,64 @@ public class HorizontalAddFragment extends BaseFragment implements
             String[] separated = model.loopContent.split("#");
             nowPlaying = model.loopContent + '#' + model.duration;
 
+            //Log.e(TAG,"NowPlaying :" +nowPlaying);
             if (storeLoopIdList.size() == 1) {
+                contentCounterForMany = 0;
                 if (contentCounter == 0) {
                     viewLoopCount = 1;
                     contentCounter++;
+                    if (contentCounter == listOfContent.size()) {
+                        contentCounter = 0;
+                    }
+
                 } else {
-                    contentCounter++;
                     viewLoopCount = 0;
+                    contentCounter++;
                     if (contentCounter == listOfContent.size()) {
                         contentCounter = 0;
                     }
                 }
 
             } else {
-                if (storeLoopId == Integer.parseInt(separated[1])) {
-                    viewLoopCount = 0;
-                } else {
-                    viewLoopCount = 1;
-                    storeLoopId = Integer.parseInt(separated[1]);
+                contentCounter = 0;
+                //Log.e(TAG,"A :" +storeRecentLoopId);
+                //Log.e(TAG,"B :" +separated[1]);
+                if(storeRecentLoopId.equals(separated[1])){
+                    //Log.e(TAG,"equal");
+                }else {
+                    contentCounterForMany = 0;
+                    //Log.e(TAG,"not equal");
                 }
+                storeRecentLoopId = separated[1];
+                int count = checkContentInPlayList(separated[1]);
+                if (contentCounterForMany == 0) {
+                    viewLoopCount = 1;
+                    contentCounterForMany++;
+                    if (contentCounterForMany == count) {
+                        contentCounterForMany = 0;
+                    }
+
+                } else {
+                    viewLoopCount = 0;
+                    contentCounterForMany++;
+                    if (contentCounterForMany == count) {
+                        contentCounterForMany = 0;
+                    }
+
+                }
+                /*Log.e(TAG, "CounterForMany :" + contentCounterForMany);
+                Log.e(TAG, "Loop Count :" + count);
+                Log.e(TAG, "Loop id :" + separated[1]);
+                Log.e(TAG, "View Loop Count :" + viewLoopCount);
+                Log.e(TAG, "---------------------------");*/
 
             }
 
-           /* if (checkInterNetConnection()) {
+            if (isInternetWorks) {
                 callLoopContentPingProcessTask();
             } else {
                 collectAllLoopContentDataForOffline();
-            }*/
+            }
 
             if (model.type.equalsIgnoreCase(Constant.IMAGE)) {
                 playImage(model);
@@ -338,6 +356,19 @@ public class HorizontalAddFragment extends BaseFragment implements
         } else {
             handlerSlider.postDelayed(runnableSlider, 0);
         }
+
+    }
+
+    private int checkContentInPlayList(String loopId) {
+
+        int count = 0;
+        for (int i = 0; i < listOfContent.size(); i++) {
+            String[] separated = listOfContent.get(i).loopContent.split("#");
+            if (loopId.equals(separated[1])) {
+                count++;
+            }
+        }
+        return count;
 
     }
 
@@ -351,7 +382,7 @@ public class HorizontalAddFragment extends BaseFragment implements
     private void playVideo(ContentDataModel model) {
         sliderVideoView.stopPlayback();
         sliderVideoView.setVideoURI(Uri.parse(model.url));
-        Log.e(TAG, "VIDEO :" + Uri.parse(model.url));
+        //Log.e(TAG, "VIDEO :" + Uri.parse(model.url));
         sliderVideoView.seekTo(0);
         sliderVideoView.setVisibility(View.VISIBLE);
         sliderImageView.setVisibility(View.GONE);
@@ -372,7 +403,7 @@ public class HorizontalAddFragment extends BaseFragment implements
     }
 
     public void callPing() {
-        if (checkInterNetConnection()) {
+        if (isInternetWorks) {
             Log.e(TAG, "PingCallRunnable" + Constant.getCurrentDate());
             if (!PreferenceManager.getStringForKey(thisContext, Constant.DEVICE_ID, Constant.IS_EMPTY).isEmpty()) {
                 isOffline = 0;
@@ -382,14 +413,66 @@ public class HorizontalAddFragment extends BaseFragment implements
         }
     }
 
-    private void sendOfflinePing(Long offlineTime) {
+    private void sendOfflinePing(Long offlineTime, String date, String id) {
         isOffline = 1;
-        collectDevicePinkData();
+        collectDevicePinkData(date);
         OffLineDevicePingAsyncTask asyncTask = new OffLineDevicePingAsyncTask(this,
-                devicePingModel, offlineTime);
+                devicePingModel, offlineTime, id);
         asyncTask.execute();
 
 
+
+    }
+
+    @Subscribe
+    public void getEventMessage(EventMessage message) {
+        String data = message.getEventMessage();
+
+    }
+
+    //CheckInternetAsyncTask.CheckInternetWorksListener
+    @Override
+    public void didInternetWorking(boolean status) {
+        PreferenceManager.saveBooleanForKey(getContext(), Constant.IS_INTERNET_WORKING, status);
+        isInternetWorks = status;
+        if (isInternetWorks) {
+            offLineIconImageView.setVisibility(View.GONE);
+            saveOffline = PreferenceManager.getBooleanForKey(getContext(), Constant.SAVE_OFFLINE, false);
+            //Toast.makeText(getApplicationContext(),"VALUE:" + saveOffline,Toast.LENGTH_LONG).show();
+            if(saveOffline){
+                PreferenceManager.saveBooleanForKey(getContext(), Constant.SAVE_OFFLINE, false);
+                ArrayList<DateTimeModel> listOfDateAndTime = database.getAllOfflineDateAndTime();
+                if (listOfDateAndTime.size() > 0) {
+                    for (int i = 0; i < listOfDateAndTime.size(); i++) {
+                        DateTimeModel model = new DateTimeModel();
+                        model.id = listOfDateAndTime.get(i).id;
+                        model.dateValue = listOfDateAndTime.get(i).dateValue;
+                        model.timeValue = listOfDateAndTime.get(i).timeValue;
+                        if (i == listOfDateAndTime.size() - 1) {
+                            String date = model.dateValue + " " + model.timeValue;
+                            sendOfflinePing(Constant.offLineTimeDifference(date, Constant.getCurrentDate()), Constant.getCurrentDate(), model.id);
+                        } else {
+                            String startDateTime = model.dateValue + " " + model.timeValue;
+                            String endDateTime = listOfDateAndTime.get(i + 1).dateValue + " " + listOfDateAndTime.get(i + 1).timeValue;
+                            sendOfflinePing(Constant.offLineTimeDifference(startDateTime, endDateTime), startDateTime, model.id);
+                        }
+                    }
+                    sendOfflineLoopContent();
+                }
+
+            }
+
+        } else {
+            PreferenceManager.saveBooleanForKey(getContext(), Constant.SAVE_OFFLINE, true);
+            offLineIconImageView.setVisibility(View.VISIBLE);
+            boolean isDateAvailable = database.isDateAvailable(Constant.getOnlyCurrentDate());
+            if (!isDateAvailable) {
+                DateTimeModel model = new DateTimeModel();
+                model.dateValue = Constant.getOnlyCurrentDate();
+                model.timeValue = Constant.getOnlyCurrentTime();
+                database.insertOfflineDateAndTime(model);
+            }
+        }
     }
 
     //OnLineDevicePingAsyncTask.GetOnLineDevicePingListener,
@@ -407,28 +490,34 @@ public class HorizontalAddFragment extends BaseFragment implements
                         pingCallDelay = Integer.parseInt(pingCall);
                     }
                     if (contentUpdate) {
-                        handlerSlider.removeCallbacks(runnableSlider);
+                        //handlerSlider.removeCallbacks(runnableSlider);
                         //pingCallHandler.removeCallbacks(pingCallRunnable);
-                        //callGetContentApi();
+                        //Log.e(TAG, "Send event to activity");
+                        // send to activity and call get content api for new data
+                        //GlobalBus.getBus().post(new EventMessage(Constant.DOWNLOAD_CONTENT));
+
+
                     } else {
-                        //pingCallHandler.postDelayed(pingCallRunnable, pingCallDelay);
+                        pingCallHandler.postDelayed(pingCallRunnable, pingCallDelay);
                     }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         } else {
-            //pingCallHandler.postDelayed(pingCallRunnable, pingCallDelay);
+            pingCallHandler.postDelayed(pingCallRunnable, pingCallDelay);
         }
     }
 
     //OffLineDevicePingAsyncTask.GetOffLineDevicePingListener
     @Override
-    public void didReceivedOffLineDevicePingResult(String status, String json) {
+    public void didReceivedOffLineDevicePingResult(String status, String json, String id) {
         isOffline = 0;
+        pingCallHandler.removeCallbacks(pingCallRunnable);
         pingCallHandler.postDelayed(pingCallRunnable, pingCallDelay);
         if (status.equals(Constant.SUCCESS)) {
-
+            database.deleteDateTimeById(id);
         }
     }
+
 }

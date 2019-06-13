@@ -5,6 +5,10 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import static android.content.Context.CONNECTIVITY_SERVICE;
 
 public class NetworkUtil {

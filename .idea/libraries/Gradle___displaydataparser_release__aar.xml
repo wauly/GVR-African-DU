@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: :displaydataparser-release:@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/displaydataparser-release.aar/d830387ab277d1e382b5c3802cd40ecf/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/displaydataparser-release.aar/d830387ab277d1e382b5c3802cd40ecf/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/displaydataparser-release.aar/1d6c5a33f58599c07aae0b11845668f6/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/displaydataparser-release.aar/1d6c5a33f58599c07aae0b11845668f6/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

@@ -257,7 +257,7 @@ public class HorizontalAddFragment extends BaseFragment implements
             listOfContent.clear();
         }
         listOfContent = database.getAllHorizontalContent();
-        Log.e(TAG, "Size Of vertical content :" + listOfContent.size());
+        Log.e(TAG, "Size Of horizontal content :" + listOfContent.size());
         if (listOfContent.size() > 0) {
             for (int i = 0; i < listOfContent.size(); i++) {
 
@@ -380,25 +380,33 @@ public class HorizontalAddFragment extends BaseFragment implements
     }
 
     private void playVideo(ContentDataModel model) {
+
         sliderVideoView.stopPlayback();
         sliderVideoView.setVideoURI(Uri.parse(model.url));
-        //Log.e(TAG, "VIDEO :" + Uri.parse(model.url));
+        Log.e(TAG, "VIDEO :" + Uri.parse(model.url));
         sliderVideoView.seekTo(0);
         sliderVideoView.setVisibility(View.VISIBLE);
         sliderImageView.setVisibility(View.GONE);
         sliderVideoView.setOnPreparedListener(mp -> {
             try {
                 sliderVideoView.start();
-
             } catch (Exception e) {
-                Log.e(TAG, "setOnPreparedListener Error : " + e.getMessage());
+                Log.e(TAG, "Start video error : " + e.getMessage());
             }
         });
         sliderVideoView.setOnCompletionListener(mediaPlayer -> {
-            sliderVideoView.pause();
-            sliderVideoView.stopPlayback();
-
+            try {
+                sliderVideoView.pause();
+                sliderVideoView.stopPlayback();
+            } catch (Exception e) {
+                Log.e(TAG, "Stop video error : " + e.getMessage());
+            }
             handlerSlider.postDelayed(runnableSlider, 0);
+        });
+        sliderVideoView.setOnErrorListener((mp, what, extra) -> {
+            Log.e(TAG, "start video Error : " + "::::");
+            handlerSlider.postDelayed(runnableSlider, 0);
+            return true;
         });
     }
 
@@ -419,8 +427,6 @@ public class HorizontalAddFragment extends BaseFragment implements
         OffLineDevicePingAsyncTask asyncTask = new OffLineDevicePingAsyncTask(this,
                 devicePingModel, offlineTime, id);
         asyncTask.execute();
-
-
 
     }
 

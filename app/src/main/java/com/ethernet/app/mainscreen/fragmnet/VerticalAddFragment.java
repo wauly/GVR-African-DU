@@ -87,7 +87,7 @@ public class VerticalAddFragment extends BaseFragment implements
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_advertisement, container, false);
-        Log.e(TAG, "onCreateView()");
+        //Log.e(TAG, "onCreateView()");
         thisContext = getContext();
         database = new DatabaseHandler(thisContext);
         gps = new GPSTracker(thisContext);
@@ -205,15 +205,6 @@ public class VerticalAddFragment extends BaseFragment implements
         new CheckInternetAsyncTask(getContext(), this).execute();
     }
 
-    private void setOrientation() {
-        final String orientation = PreferenceManager.getStringForKey(thisContext, Constant.API_TAG.ORIENTATION, Constant.IS_EMPTY);
-        if (orientation.equalsIgnoreCase(Constant.HORIZONTAL)) {
-            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        } else if (orientation.equalsIgnoreCase(Constant.VERTICAL)) {
-            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
-    }
-
     private void callLoopContentPingProcessTask() {
         collectDevicePinkData(Constant.getCurrentDate());
         final OnLineLoopContentPingProcessTask task = new OnLineLoopContentPingProcessTask(devicePingModel);
@@ -308,13 +299,13 @@ public class VerticalAddFragment extends BaseFragment implements
 
             } else {
                 contentCounter = 0;
-                Log.e(TAG,"A :" +storeRecentLoopId);
-                Log.e(TAG,"B :" +separated[1]);
+                //Log.e(TAG,"A :" +storeRecentLoopId);
+                //Log.e(TAG,"B :" +separated[1]);
                 if(storeRecentLoopId.equals(separated[1])){
-                    Log.e(TAG,"equal");
+                    //Log.e(TAG,"equal");
                 }else {
                     contentCounterForMany = 0;
-                    Log.e(TAG,"not equal");
+                    //Log.e(TAG,"not equal");
                 }
                 storeRecentLoopId = separated[1];
                 int count = checkContentInPlayList(separated[1]);
@@ -381,7 +372,7 @@ public class VerticalAddFragment extends BaseFragment implements
     private void playVideo(ContentDataModel model) {
         sliderVideoView.stopPlayback();
         sliderVideoView.setVideoURI(Uri.parse(model.url));
-        //Log.e(TAG, "VIDEO :" + Uri.parse(model.url));
+        Log.e(TAG, "VIDEO :" + Uri.parse(model.url));
         sliderVideoView.seekTo(0);
         sliderVideoView.setVisibility(View.VISIBLE);
         sliderImageView.setVisibility(View.GONE);
@@ -390,14 +381,23 @@ public class VerticalAddFragment extends BaseFragment implements
                 sliderVideoView.start();
 
             } catch (Exception e) {
-                Log.e(TAG, "setOnPreparedListener Error : " + e.getMessage());
+                Log.e(TAG, "Start video error : " + e.getMessage());
             }
         });
         sliderVideoView.setOnCompletionListener(mediaPlayer -> {
-            sliderVideoView.pause();
-            sliderVideoView.stopPlayback();
+            try {
+                sliderVideoView.pause();
+                sliderVideoView.stopPlayback();
+            } catch (Exception e) {
+                Log.e(TAG, "Stop video error : " + e.getMessage());
+            }
 
             handlerSlider.postDelayed(runnableSlider, 0);
+        });
+        sliderVideoView.setOnErrorListener((mp, what, extra) -> {
+            Log.e(TAG, "start video Error : " + "::::");
+            handlerSlider.postDelayed(runnableSlider, 0);
+            return true;
         });
     }
 

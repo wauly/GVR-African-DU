@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ethernet.app.R;
 import com.ethernet.app.global.PreferenceManager;
@@ -102,10 +101,10 @@ public class SplashActivity extends AppCompatActivity implements
 
         if(status){
             PreferenceManager.saveBooleanForKey(this, Constant.IS_INTERNET_WORKING, true);
-            Toast.makeText(getApplicationContext(),"internet available",Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(),"internet available",Toast.LENGTH_LONG).show();
         }else {
             PreferenceManager.saveBooleanForKey(this, Constant.IS_INTERNET_WORKING, false);
-            Toast.makeText(getApplicationContext(),"no internet available",Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(),"no internet available",Toast.LENGTH_LONG).show();
         }
 
 

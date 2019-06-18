@@ -63,6 +63,7 @@ public class MainActivity extends BaseAppCompatActivity implements
     private String FP_TYPE = Constant.IS_EMPTY;
     private boolean isInternetWorks = false;
     private String sendMessage = Constant.IS_EMPTY;
+    private boolean iAmInsideHorizontalAdd = false;
 
 
     @Override
@@ -304,9 +305,11 @@ public class MainActivity extends BaseAppCompatActivity implements
                         String firstTimeCall = jObj.getString("newState");
                         String fp = jObj.getString("fp");
                         if (firstTimeCall.equalsIgnoreCase("calling") && fp.equals(FP_TYPE)) {
+                            iAmInsideHorizontalAdd = true;
                             clearStack();
                             loadHorizontalPaymentFuelFragment();
                         } else if (firstTimeCall.equalsIgnoreCase("idle") && fp.equals(FP_TYPE)) {
+                            iAmInsideHorizontalAdd = false;
                             clearStack();
                             loadVerticalFragment();
                         }
@@ -362,12 +365,15 @@ public class MainActivity extends BaseAppCompatActivity implements
     //SaveContentUrlAsyncTask.SaveContentUrlListener
     @Override
     public void didReceivedSaveContentUrlDate(String status) {
-        Log.e(TAG, "STATUS : "+status);
+        //Log.e(TAG, "STATUS : "+status);
         if (status.equals(Constant.SUCCESS) || status.equals(Constant.IS_EMPTY)) {
             updateContentFlg();
-            loadVerticalFragment();
-            logoImageView.setVisibility(View.GONE);
-            frameLayout.setVisibility(View.VISIBLE);
+            Log.e(TAG, "I am : "+ iAmInsideHorizontalAdd);
+            if(!iAmInsideHorizontalAdd){
+                loadVerticalFragment();
+                logoImageView.setVisibility(View.GONE);
+                frameLayout.setVisibility(View.VISIBLE);
+            }
         }
         deletedImageAndVideoFromLocal();
     }

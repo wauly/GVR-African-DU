@@ -133,6 +133,9 @@ public class FuelFragment extends BaseFragment {
         if (currentDisplayVol.equals(currDisplayVol)
                 && !currentDisplayVol.equals("0.00000")
                 && !currentDisplayVol.isEmpty()) {
+
+            GlobalBus.getBus().post(new EventMessage(Constant.LOAD_PAYMENT_SCREEN));
+
             Handler handler = new Handler();
             handler.postDelayed(() -> {
 

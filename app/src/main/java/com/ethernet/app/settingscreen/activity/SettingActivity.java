@@ -21,7 +21,7 @@ public class SettingActivity extends BaseAppCompatActivity implements
     final String[] port = new String[]{"Select Port", "16223", "16224"};
     final String[] fuel_type = new String[]{"Select fuel type", "PMS", "AGO"};
     final String[] fp_type = new String[]{"Select fp type", "1", "2"};
-    final String[] screen_sleep_time = new String[]{"Select sleep time", "30000", "20000"};
+    final String[] screen_sleep_time = new String[]{"Select sleep time", "5000","10000","20000", "30000"};
 
     private Spinner ipAddressSpinner,portSpinner, fuelTypeSpinner,fpTypeSpinner,sleepTimeSpinner;
 

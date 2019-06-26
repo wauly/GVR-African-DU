@@ -62,6 +62,7 @@ public class Constant {
     public final static String SAVE_OFF_LINE_TIME = "saveOfLineTime";
     public final static String OFFLINE_PING_ID = "id";
     public final static String STOP_FUELING = "stop";
+    public final static String LOAD_PAYMENT_SCREEN = "payment_screen";
     public final static String DOWNLOAD_CONTENT = "need To download content";
     public final static String DOWNLOAD_CONTENT_SUCCESSFUL = "content download successful";
     public static final String DATE_FORMAT = "MM-dd-yyyy HH:mm:ss";

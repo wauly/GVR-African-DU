@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -30,6 +31,7 @@ import com.ethernet.app.mainscreen.asynctask.GetContentAsyncTask;
 import com.ethernet.app.mainscreen.asynctask.SaveContentUrlAsyncTask;
 import com.ethernet.app.mainscreen.asynctask.UpdateContentFlgTask;
 import com.ethernet.app.mainscreen.fragmnet.HorizontalPaymentFuelFragment;
+import com.ethernet.app.mainscreen.fragmnet.PaymentFragment;
 import com.ethernet.app.mainscreen.fragmnet.VerticalAddFragment;
 import com.ethernet.app.permission.PermissionsHelper;
 import com.ethernet.app.service.EthernetService;
@@ -51,6 +53,7 @@ public class MainActivity extends BaseAppCompatActivity implements
     private FragmentTransaction fragmentTransaction;
     private FragmentManager fragmentManager;
     private MyBroadCastReceiver myBroadCastReceiver;
+    private Handler handlerForWaitScreen;
     //views
     private ImageView logoImageView;
     private FrameLayout frameLayout;
@@ -64,6 +67,8 @@ public class MainActivity extends BaseAppCompatActivity implements
     private boolean isInternetWorks = false;
     private String sendMessage = Constant.IS_EMPTY;
     private boolean iAmInsideHorizontalAdd = false;
+    private int sleepTime = 10000;
+
 
 
     @Override
@@ -76,6 +81,7 @@ public class MainActivity extends BaseAppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        handlerForWaitScreen = new Handler();
 
         database = new DatabaseHandler(myContext);
 
@@ -94,6 +100,7 @@ public class MainActivity extends BaseAppCompatActivity implements
 
     @Override
     public void initView() {
+        sleepTime = PreferenceManager.getIntForKey(this, Constant.DU_Setting.SLEEP_TIME,0);
         isInternetWorks = PreferenceManager.getBooleanForKey(this, Constant.IS_INTERNET_WORKING, false);
         deviceId = PreferenceManager.getStringForKey(this, Constant.DEVICE_ID, Constant.IS_EMPTY);
         IP_ADDRESS = PreferenceManager.getStringForKey(this, Constant.DU_Setting.IP_ADDRESS, Constant.IS_EMPTY);
@@ -154,17 +161,17 @@ public class MainActivity extends BaseAppCompatActivity implements
                 }
             } else {
                 loadVerticalFragment();
-                Log.e(TAG, "Load fragment :" + "1");
+                //Log.e(TAG, "Load fragment :" + "1");
             }
         } else {
-            Log.e(TAG, "Load fragment :" + "2");
+            //Log.e(TAG, "Load fragment :" + "2");
             loadVerticalFragment();
 
         }
     }
 
     private void loadVerticalFragment() {
-        Log.e(TAG,"Load vertical fragment");
+        //Log.e(TAG, "Load vertical fragment");
         final VerticalAddFragment fragment = new VerticalAddFragment();
         addFragment(fragment, Constant.ScreenType.VERTICAL_ADD);
         logoImageView.setVisibility(View.GONE);
@@ -183,7 +190,7 @@ public class MainActivity extends BaseAppCompatActivity implements
 
     //get data from server method name is  :- GET_CONTENT
     private void callGetContentApi() {
-        Log.e(TAG,"calling get content api");
+        Log.e(TAG, "calling get content api");
         GetContentAsyncTask task = new GetContentAsyncTask(this, database, myContext);
         task.execute(deviceId);
     }
@@ -244,7 +251,7 @@ public class MainActivity extends BaseAppCompatActivity implements
 
     @Subscribe
     public void getEventMessage(EventMessage message) {
-         sendMessage = message.getEventMessage();
+        sendMessage = message.getEventMessage();
         if (sendMessage.equals(Constant.DOWNLOAD_CONTENT)) {
             checkInterNetConnection();
         }
@@ -294,7 +301,7 @@ public class MainActivity extends BaseAppCompatActivity implements
         @Override
         public void onReceive(Context context, Intent intent) {
             try {
-                Log.d(TAG, "onReceive() called");
+                //Log.d(TAG, "onReceive() called");
                 String data = intent.getStringExtra(Constant.DATA);
                 Log.e(TAG, "DATA called :" + data);
                 //Toast.makeText(context, "DATA :"+ data, Toast.LENGTH_SHORT).show();
@@ -306,12 +313,22 @@ public class MainActivity extends BaseAppCompatActivity implements
                         String fp = jObj.getString("fp");
                         if (firstTimeCall.equalsIgnoreCase("calling") && fp.equals(FP_TYPE)) {
                             iAmInsideHorizontalAdd = true;
+                            Log.e(TAG,"calling :");
+                            handlerForWaitScreen.removeCallbacksAndMessages(null);
+                            handlerForWaitScreen.removeCallbacks(null);
                             clearStack();
                             loadHorizontalPaymentFuelFragment();
                         } else if (firstTimeCall.equalsIgnoreCase("idle") && fp.equals(FP_TYPE)) {
                             iAmInsideHorizontalAdd = false;
-                            clearStack();
-                            loadVerticalFragment();
+                            GlobalBus.getBus().post(new EventMessage(Constant.LOAD_PAYMENT_SCREEN));
+                            Log.e(TAG,"SleepTime :" +sleepTime);
+
+                            handlerForWaitScreen.postDelayed(() -> {
+                                clearStack();
+                                loadVerticalFragment();
+                            }, sleepTime);
+
+
                         }
                     }
 
@@ -329,10 +346,10 @@ public class MainActivity extends BaseAppCompatActivity implements
     @Override
     public void didInternetWorking(boolean status) {
         isInternetWorks = status;
-        if(isInternetWorks){
+        if (isInternetWorks) {
             if (sendMessage.equals(Constant.DOWNLOAD_CONTENT)) {
                 callGetContentApi();
-                Log.e(TAG,"start to download new content");
+                Log.e(TAG, "start to download new content");
             }
         }
     }
@@ -368,8 +385,8 @@ public class MainActivity extends BaseAppCompatActivity implements
         //Log.e(TAG, "STATUS : "+status);
         if (status.equals(Constant.SUCCESS) || status.equals(Constant.IS_EMPTY)) {
             updateContentFlg();
-            Log.e(TAG, "I am : "+ iAmInsideHorizontalAdd);
-            if(!iAmInsideHorizontalAdd){
+            //Log.e(TAG, "I am : " + iAmInsideHorizontalAdd);
+            if (!iAmInsideHorizontalAdd) {
                 loadVerticalFragment();
                 logoImageView.setVisibility(View.GONE);
                 frameLayout.setVisibility(View.VISIBLE);

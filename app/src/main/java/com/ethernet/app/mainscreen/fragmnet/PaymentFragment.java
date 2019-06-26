@@ -1,6 +1,5 @@
 package com.ethernet.app.mainscreen.fragmnet;
 
-
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
@@ -40,13 +39,12 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 
-
-public class VerticalAddFragment extends BaseFragment implements
+public class PaymentFragment extends BaseFragment implements
         OnLineDevicePingAsyncTask.GetOnLineDevicePingListener,
         OffLineDevicePingAsyncTask.GetOffLineDevicePingListener,
         CheckInternetAsyncTask.CheckInternetWorksListener {
 
-    private static final String TAG = VerticalAddFragment.class.getSimpleName();
+    private static final String TAG = HorizontalAddFragment.class.getSimpleName();
 
     public static final String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
     public static final File folder = new File(extStorageDirectory, "waulypod-resource");
@@ -79,7 +77,7 @@ public class VerticalAddFragment extends BaseFragment implements
     private boolean saveOffline = false;
     private String storeRecentLoopId = Constant.IS_EMPTY;
 
-    public VerticalAddFragment() {
+    public PaymentFragment() {
         // Required empty public constructor
     }
 
@@ -246,8 +244,8 @@ public class VerticalAddFragment extends BaseFragment implements
         if (listOfContent.size() != 0) {
             listOfContent.clear();
         }
-        listOfContent = database.getAllVerticalContent();
-        Log.e(TAG, "Size Of vertical content :" + listOfContent.size());
+        listOfContent = database.getAllPaymentContent();
+        Log.e(TAG, "Size Of horizontal content :" + listOfContent.size());
         if (listOfContent.size() > 0) {
             for (int i = 0; i < listOfContent.size(); i++) {
 
@@ -301,9 +299,9 @@ public class VerticalAddFragment extends BaseFragment implements
                 contentCounter = 0;
                 //Log.e(TAG,"A :" +storeRecentLoopId);
                 //Log.e(TAG,"B :" +separated[1]);
-                if(storeRecentLoopId.equals(separated[1])){
+                if (storeRecentLoopId.equals(separated[1])) {
                     //Log.e(TAG,"equal");
-                }else {
+                } else {
                     contentCounterForMany = 0;
                     //Log.e(TAG,"not equal");
                 }
@@ -370,6 +368,7 @@ public class VerticalAddFragment extends BaseFragment implements
     }
 
     private void playVideo(ContentDataModel model) {
+
         sliderVideoView.stopPlayback();
         sliderVideoView.setVideoURI(Uri.parse(model.url));
         Log.e(TAG, "VIDEO :" + Uri.parse(model.url));
@@ -379,7 +378,6 @@ public class VerticalAddFragment extends BaseFragment implements
         sliderVideoView.setOnPreparedListener(mp -> {
             try {
                 sliderVideoView.start();
-
             } catch (Exception e) {
                 Log.e(TAG, "Start video error : " + e.getMessage());
             }
@@ -391,7 +389,6 @@ public class VerticalAddFragment extends BaseFragment implements
             } catch (Exception e) {
                 Log.e(TAG, "Stop video error : " + e.getMessage());
             }
-
             handlerSlider.postDelayed(runnableSlider, 0);
         });
         sliderVideoView.setOnErrorListener((mp, what, extra) -> {
@@ -419,8 +416,6 @@ public class VerticalAddFragment extends BaseFragment implements
                 devicePingModel, offlineTime, id);
         asyncTask.execute();
 
-
-
     }
 
     @Subscribe
@@ -438,7 +433,7 @@ public class VerticalAddFragment extends BaseFragment implements
             offLineIconImageView.setVisibility(View.GONE);
             saveOffline = PreferenceManager.getBooleanForKey(getContext(), Constant.SAVE_OFFLINE, false);
             //Toast.makeText(getApplicationContext(),"VALUE:" + saveOffline,Toast.LENGTH_LONG).show();
-            if(saveOffline){
+            if (saveOffline) {
                 PreferenceManager.saveBooleanForKey(getContext(), Constant.SAVE_OFFLINE, false);
                 ArrayList<DateTimeModel> listOfDateAndTime = database.getAllOfflineDateAndTime();
                 if (listOfDateAndTime.size() > 0) {
@@ -489,11 +484,12 @@ public class VerticalAddFragment extends BaseFragment implements
                         pingCallDelay = Integer.parseInt(pingCall);
                     }
                     if (contentUpdate) {
-                        handlerSlider.removeCallbacks(runnableSlider);
-                        pingCallHandler.removeCallbacks(pingCallRunnable);
-                        Log.e(TAG, "Send event to activity");
+                        //handlerSlider.removeCallbacks(runnableSlider);
+                        //pingCallHandler.removeCallbacks(pingCallRunnable);
+                        //Log.e(TAG, "Send event to activity");
                         // send to activity and call get content api for new data
-                        GlobalBus.getBus().post(new EventMessage(Constant.DOWNLOAD_CONTENT));
+                        //GlobalBus.getBus().post(new EventMessage(Constant.DOWNLOAD_CONTENT));
+
 
                     } else {
                         pingCallHandler.postDelayed(pingCallRunnable, pingCallDelay);

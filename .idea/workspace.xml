@@ -79,9 +79,9 @@
     <session id="-448025830">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="32" />
+          <entry key="project.closed" value="36" />
           <entry key="project.open.time.0" value="2" />
-          <entry key="project.open.time.1" value="7" />
+          <entry key="project.open.time.1" value="8" />
           <entry key="project.open.time.11" value="1" />
           <entry key="project.open.time.14" value="1" />
           <entry key="project.open.time.19" value="1" />
@@ -89,35 +89,38 @@
           <entry key="project.open.time.20" value="1" />
           <entry key="project.open.time.23" value="1" />
           <entry key="project.open.time.24" value="3" />
+          <entry key="project.open.time.26" value="1" />
           <entry key="project.open.time.27" value="1" />
-          <entry key="project.open.time.3" value="2" />
+          <entry key="project.open.time.3" value="3" />
+          <entry key="project.open.time.32" value="1" />
           <entry key="project.open.time.37" value="2" />
           <entry key="project.open.time.4" value="1" />
           <entry key="project.open.time.41" value="1" />
           <entry key="project.open.time.44" value="1" />
+          <entry key="project.open.time.47" value="1" />
           <entry key="project.open.time.55" value="1" />
           <entry key="project.open.time.7" value="1" />
-          <entry key="project.opened" value="34" />
+          <entry key="project.opened" value="39" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="gradle" value="74" />
-          <entry key="java" value="3485" />
+          <entry key="java" value="4018" />
           <entry key="xml" value="104" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="Groovy" value="74" />
-          <entry key="JAVA" value="3485" />
+          <entry key="JAVA" value="4018" />
           <entry key="XML" value="104" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="gradle" value="10" />
-          <entry key="java" value="130" />
+          <entry key="java" value="155" />
           <entry key="properties" value="4" />
           <entry key="xml" value="14" />
         </counts>
@@ -125,7 +128,7 @@
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="Groovy" value="10" />
-          <entry key="JAVA" value="130" />
+          <entry key="JAVA" value="155" />
           <entry key="Properties" value="4" />
           <entry key="XML" value="14" />
         </counts>
@@ -136,7 +139,20 @@
     <favorites_list name="GVRAfricaDu" />
   </component>
   <component name="FileEditorManager">
-    <leaf />
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/activity/MainActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="195">
+              <caret line="387" column="28" lean-forward="true" selection-start-line="387" selection-start-column="28" selection-end-line="387" selection-end-column="28" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -4636,7 +4652,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/src/main/java/com/ethernet/app/registerdevicescreen/asynctask/DeviceVerifyAsyncTask.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/ethernet/app/registerdevicescreen/activity/DeviceActivity.java" />
@@ -4664,14 +4679,11 @@
         <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_advertisement.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/fragmnet/PetrolAndDieselFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/fragmnet/PaymentAddFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/fragmnet/HorizontalPaymentFuelFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_fuel.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/colors.xml" />
         <option value="$PROJECT_DIR$/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_setting.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/ethernet/app/settingscreen/activity/SettingActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/fragmnet/FuelFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_splash.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_device.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/ethernet/app/service/EthernetService.java" />
@@ -4682,11 +4694,15 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/model/DateTimeModel.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/ethernet/app/global/DatabaseHandler.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/asynctask/OffLineDevicePingAsyncTask.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/ethernet/app/utility/Constant.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/ethernet/app/splashscreen/SplashActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/activity/MainActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/fragmnet/VerticalAddFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/fragmnet/HorizontalAddFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/fragmnet/VerticalAddFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/fragmnet/PaymentFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/ethernet/app/utility/Constant.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/fragmnet/FuelFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/fragmnet/HorizontalPaymentFuelFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/ethernet/app/settingscreen/activity/SettingActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/activity/MainActivity.java" />
       </list>
     </option>
   </component>
@@ -4701,17 +4717,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="GVREthernetExample" type="58d84e3e:PackageViewProjectNode" />
-              <item name="app" type="616d4139:PackageViewModuleNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
       <pane id="Scope" />
       <pane id="AndroidView">
         <subPane>
@@ -4730,6 +4735,35 @@
               <item name="app" type="feadf853:AndroidModuleNode" />
               <item name="java" type="edd41e36:AndroidSourceTypeNode" />
               <item name="app" type="cbb59c9e:AndroidPsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="GVRAfricaDu" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="app" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="global" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="GVRAfricaDu" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="app" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="mainscreen" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="GVRAfricaDu" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="app" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="settingscreen" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="GVRAfricaDu" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="app" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="settingscreen" type="462c0819:PsiDirectoryNode" />
+              <item name="activity" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="GVRAfricaDu" type="1abcf292:AndroidViewProjectNode" />
@@ -4782,6 +4816,17 @@
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="GVREthernetExample" type="58d84e3e:PackageViewProjectNode" />
+              <item name="app" type="616d4139:PackageViewModuleNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -4792,7 +4837,7 @@
     <property name="adb_path" value="C:\Users\LEENA\AppData\Local\Android\Sdk\platform-tools\adb.exe" />
     <property name="algorithm" value="Scalr" />
     <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
-    <property name="device.picker.selection" value="192.168.0.121:5555" />
+    <property name="device.picker.selection" value="192.168.0.96:5555" />
     <property name="format" value="PNG" />
     <property name="lastFolderRoot" value="$USER_HOME$/Pictures/gvr/image3.jpg" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/app/src/main/res/drawable-xxxhdpi" />
@@ -5002,7 +5047,41 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <editor active="true" />
     <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.47800586" visible="true" weight="0.20604026" />
+      <window_info id="Structure" order="1" weight="0.25" />
+      <window_info id="Designer" order="2" />
+      <window_info id="Build Variants" order="3" sideWeight="0.5219941" side_tool="true" weight="0.20604026" />
+      <window_info id="Image Layers" order="4" />
+      <window_info id="Favorites" order="5" sideWeight="0.516129" side_tool="true" weight="0.20872483" />
+      <window_info id="Captures" order="6" sideWeight="0.5293255" side_tool="true" weight="0.20872483" />
+      <window_info id="Capture Tool" order="7" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3293979" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.398827" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Build" order="7" weight="0.48240468" />
+      <window_info anchor="bottom" id="Android Profiler" order="8" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" weight="0.53958946" />
+      <window_info anchor="bottom" id="Version Control" order="10" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.32991204" />
+      <window_info anchor="bottom" id="Logcat" order="12" weight="0.4750733" />
+      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Capture Analysis" order="3" />
+      <window_info anchor="right" id="WIFI ADB ULTIMATE" order="4" weight="0.2885906" />
+      <window_info anchor="right" id="Device File Explorer" order="5" side_tool="true" />
+      <window_info anchor="right" id="Gradle" order="6" />
+      <window_info anchor="right" id="Palette&#9;" order="7" />
+      <window_info anchor="right" id="Theme Preview" order="8" />
+      <window_info anchor="right" id="Preview" order="9" weight="0.35100672" />
+    </layout>
+    <layout-to-restore>
       <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.48240468" visible="true" weight="0.16577181" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info id="Designer" order="2" />
@@ -5034,39 +5113,6 @@
       <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info anchor="right" id="Theme Preview" order="8" />
       <window_info anchor="right" id="Preview" order="9" weight="0.35100672" />
-    </layout>
-    <layout-to-restore>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.47214076" visible="true" weight="0.18120806" />
-      <window_info id="Structure" order="1" weight="0.25" />
-      <window_info id="Designer" order="2" />
-      <window_info id="Build Variants" order="3" sideWeight="0.5278592" side_tool="true" weight="0.18120806" />
-      <window_info id="Image Layers" order="4" />
-      <window_info id="Favorites" order="5" side_tool="true" />
-      <window_info id="Captures" order="6" sideWeight="0.5234604" side_tool="true" weight="0.18120806" />
-      <window_info id="Capture Tool" order="7" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.3293979" />
-      <window_info anchor="bottom" id="Run" order="2" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.398827" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Build" order="7" weight="0.48240468" />
-      <window_info anchor="bottom" id="Android Profiler" order="8" />
-      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" weight="0.53958946" />
-      <window_info anchor="bottom" id="Version Control" order="10" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.32991204" />
-      <window_info anchor="bottom" id="Logcat" order="12" weight="0.686217" />
-      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Capture Analysis" order="3" />
-      <window_info anchor="right" id="WIFI ADB ULTIMATE" order="4" weight="0.24765101" />
-      <window_info anchor="right" id="Device File Explorer" order="5" side_tool="true" />
-      <window_info anchor="right" id="Gradle" order="6" />
-      <window_info anchor="right" id="Palette&#9;" order="7" />
-      <window_info anchor="right" id="Theme Preview" order="8" />
-      <window_info anchor="right" id="Preview" order="9" weight="0.35100672" />
     </layout-to-restore>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -5087,28 +5133,14 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/global/GPSTracker.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="26" column="43" lean-forward="true" selection-start-line="26" selection-start-column="43" selection-end-line="26" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/asynctask/OnLineDevicePingAsyncTask.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1964">
-          <caret line="25" column="20" lean-forward="true" selection-start-line="25" selection-start-column="20" selection-end-line="25" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/fragmnet/AdvertisementFragment.java" />
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_horizontal_payment_fuel.xml">
-      <provider editor-type-id="android-designer2" />
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="375">
           <caret line="18" column="46" lean-forward="true" selection-start-line="18" selection-start-column="46" selection-end-line="18" selection-end-column="46" />
         </state>
       </provider>
+      <provider editor-type-id="android-designer2" />
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/global/GlobalBus.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -5124,34 +5156,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/global/EventMessage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="6" column="11" selection-start-line="6" selection-start-column="11" selection-end-line="6" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/model/ContentDataModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
-          <caret line="5" column="17" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_setting.xml">
-      <provider editor-type-id="android-designer2" />
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="350">
           <caret line="73" selection-start-line="73" selection-end-line="73" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/settingscreen/activity/SettingActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2400">
-          <caret line="119" column="17" lean-forward="true" selection-start-line="119" selection-start-column="17" selection-end-line="119" selection-end-column="17" />
-        </state>
-      </provider>
+      <provider editor-type-id="android-designer2" />
     </entry>
     <entry file="file://$USER_HOME$/AppData/Local/Android/Sdk/sources/android-28/java/net/Socket.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -5168,12 +5179,12 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_fuel.xml">
-      <provider editor-type-id="android-designer2" />
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1384">
           <caret line="19" column="36" lean-forward="true" selection-start-line="19" selection-start-column="36" selection-end-line="19" selection-end-column="36" />
         </state>
       </provider>
+      <provider editor-type-id="android-designer2" />
     </entry>
     <entry file="file://$USER_HOME$/AppData/Local/Android/Sdk/sources/android-28/java/io/InputStream.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -5201,13 +5212,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/fragmnet/FuelFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="645">
-          <caret line="97" column="29" lean-forward="true" selection-start-line="97" selection-start-column="29" selection-end-line="97" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/values/colors.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="200">
@@ -5216,20 +5220,20 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+      <provider editor-type-id="android-manifest" />
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="350">
           <caret line="38" selection-start-line="38" selection-end-line="38" />
         </state>
       </provider>
-      <provider editor-type-id="android-manifest" />
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_splash.xml">
-      <provider editor-type-id="android-designer2" />
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="266">
           <caret line="21" column="14" lean-forward="true" selection-start-line="21" selection-start-column="14" selection-end-line="21" selection-end-column="14" />
         </state>
       </provider>
+      <provider editor-type-id="android-designer2" />
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/registerdevicescreen/asynctask/DeviceVerifyAsyncTask.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -5239,12 +5243,12 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_device.xml">
-      <provider editor-type-id="android-designer2" />
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="100">
           <caret line="4" column="32" lean-forward="true" selection-start-line="4" selection-start-column="32" selection-end-line="4" selection-end-column="32" />
         </state>
       </provider>
+      <provider editor-type-id="android-designer2" />
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/registerdevicescreen/activity/DeviceActivity.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -5254,12 +5258,12 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
-      <provider editor-type-id="android-designer2" />
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="316">
           <caret line="19" column="37" selection-start-line="19" selection-start-column="25" selection-end-line="19" selection-end-column="37" />
         </state>
       </provider>
+      <provider editor-type-id="android-designer2" />
     </entry>
     <entry file="file://$USER_HOME$/AppData/Local/Android/Sdk/sources/android-28/java/net/HttpURLConnection.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -5296,13 +5300,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/fragmnet/HorizontalPaymentFuelFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="15" column="42" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/asynctask/UpdateContentFlgTask.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="209">
@@ -5318,12 +5315,12 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_advertisement.xml">
-      <provider editor-type-id="android-designer2" />
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="175">
           <caret line="7" column="40" selection-start-line="7" selection-start-column="25" selection-end-line="7" selection-end-column="40" />
         </state>
       </provider>
+      <provider editor-type-id="android-designer2" />
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/asynctask/GetContentAsyncTask.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -5361,17 +5358,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/global/DatabaseHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="416" column="33" lean-forward="true" selection-start-line="416" selection-start-column="33" selection-end-line="416" selection-end-column="33" />
-          <folding>
-            <element signature="e#10255#11507#0" />
-            <element signature="e#11512#13311#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/asynctask/OffLineDevicePingAsyncTask.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="350">
@@ -5386,13 +5372,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/utility/Constant.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1061">
-          <caret line="68" lean-forward="true" selection-start-line="68" selection-end-line="68" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/global/FullScreenVideoView.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="250">
@@ -5400,31 +5379,110 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/splashscreen/SplashActivity.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/permission/PermissionsHelper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="625">
-          <caret line="88" column="29" lean-forward="true" selection-start-line="88" selection-start-column="29" selection-end-line="88" selection-end-column="29" />
+        <state relative-caret-position="420">
+          <caret line="66" column="45" selection-start-line="66" selection-start-column="45" selection-end-line="66" selection-end-column="45" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/fragmnet/HorizontalAddFragment.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/splashscreen/SplashActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="832">
-          <caret line="401" column="34" lean-forward="true" selection-start-line="401" selection-start-column="34" selection-end-line="401" selection-end-column="34" />
+        <state relative-caret-position="407">
+          <caret line="86" column="26" lean-forward="true" selection-start-line="86" selection-start-column="26" selection-end-line="86" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/model/ContentDataModel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-905">
+          <caret line="16" column="29" lean-forward="true" selection-start-line="16" selection-start-column="29" selection-end-line="16" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/global/DatabaseHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2480">
+          <caret line="295" lean-forward="true" selection-start-line="295" selection-end-line="295" />
+          <folding>
+            <element signature="e#10255#11507#0" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/fragmnet/VerticalAddFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="507">
-          <caret line="400" column="11" selection-start-line="400" selection-start-column="11" selection-end-line="400" selection-end-column="11" />
+        <state relative-caret-position="350">
+          <caret line="456" column="25" selection-start-line="456" selection-start-column="25" selection-end-line="456" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/settingscreen/activity/SettingActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2380">
+          <caret line="32" column="43" lean-forward="true" selection-start-line="32" selection-start-column="43" selection-end-line="32" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/fragmnet/HorizontalPaymentFuelFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2100">
+          <caret line="105" column="31" selection-start-line="105" selection-start-column="12" selection-end-line="105" selection-end-column="31" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/fragmnet/PaymentFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="11800">
+          <caret line="509" column="27" selection-start-line="509" selection-start-column="27" selection-end-line="509" selection-end-column="27" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/fragmnet/HorizontalAddFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="10150">
+          <caret line="444" column="35" selection-start-line="444" selection-start-column="35" selection-end-line="444" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/fragmnet/FuelFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2875">
+          <caret line="136" column="81" selection-start-line="136" selection-start-column="62" selection-end-line="136" selection-end-column="81" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/utility/Constant.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1100">
+          <caret line="64" column="40" selection-start-line="64" selection-start-column="40" selection-end-line="64" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/global/EventMessage.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="4" column="19" selection-start-line="4" selection-start-column="19" selection-end-line="4" selection-end-column="19" />
+          <folding>
+            <element signature="e#132#133#0" expanded="true" />
+            <element signature="e#170#171#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ethernet/app/mainscreen/activity/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1255">
-          <caret line="145" column="34" selection-start-line="145" selection-start-column="34" selection-end-line="145" selection-end-column="34" />
+        <state relative-caret-position="195">
+          <caret line="387" column="28" lean-forward="true" selection-start-line="387" selection-start-column="28" selection-end-line="387" selection-end-column="28" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
